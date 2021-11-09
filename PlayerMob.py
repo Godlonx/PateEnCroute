@@ -17,6 +17,9 @@ class Player:
         sqliteConnection.commit()
         cursor.close
 
+    def add_skilltree(self, id_skilltree):
+        request = """INSERT INTO Skills (id_skill"""
+
     def get_account(self, pseudo): # permet au joueur de recupere les donne de jeu
         sqliteConnection = sqlite3.connect('StatsPLayers.db')
         cursor = sqliteConnection.cursor()
@@ -36,7 +39,9 @@ class Player:
             request = """INSERT INTO Players (id_player, wave, money, soulpoint, skillpoint, pseudo, id_skilltree) VALUES (?, ?, ?, ?, ?, ?, ?)"""
             cursor.execute(request, data)
             print("3")
+            self.add_skilltree(maxi)
             sqliteConnection.commit()
+            
         
         request = """SELECT wave, skillpoint, money, soulpoint, id_player FROM Players WHERE id_player = ?"""
         cursor.execute(request, account)

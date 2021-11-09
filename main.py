@@ -1,5 +1,7 @@
+import sqlite3
 import pygame
 import PlayerMob, start_game
+from inputbox import InputBox
 
 
 class Game:
@@ -7,13 +9,16 @@ class Game:
         self.screen = screen
         self.clock = pygame.time.Clock()
         self.running = True
+        self.active = False
+
+        self.text = ""
+        
 
         self.menu = 1
 
-        self.Titre = pygame.Rect(270, 50, 520, 150)
+        self.Titre = pygame.Rect(270, 50, 520, 150) 
 
         self.bouton_signin_hitbox = pygame.Rect(410, 500, 260, 90)
-        
 
         self.account = 0
 
@@ -84,6 +89,44 @@ class Game:
         screen.blit(self.fond2, (0, 0))
         pygame.draw.rect(self.screen, (255, 0, 0), self.bouton_menu)
 
+    def DrawSignInMenu(self):
+        
+        self.font = pygame.font.Font(None, 45)
+        self.txt_surface = self.font.render(self.text, True, (0,0,0))
+        self.input = pygame.Rect(145, 530, 765, 50)
+        signscreen = pygame.Rect((1080/4)/2, 30, 785, 650)
+        self.font2 = pygame.font.Font(None, 65)
+        self.textplayer = 'Compte existant : '
+        sqliteConnection = sqlite3.connect('StatsPlayers.db')
+        cursor = sqliteConnection.cursor()
+        request = """SELECT pseudo FROM Players"""
+        cursor.execute(request)
+        players = cursor.fetchall()
+        for player in players:
+            self.textplayer += player[0] + ', '
+        self.txt_player = self.font.render(self.textplayer, True, (255, 255, 255))
+        self.zoneplayer = pygame.Rect(145, 220, 765, 300)
+
+        pygame.draw.rect(self.screen, (15, 5, 30), signscreen)
+
+        pygame.draw.rect(self.screen, (255, 255, 255), self.input)
+        screen.blit(self.txt_surface, (self.input.x+5, self.input.y+10))
+        
+        pygame.draw.rect(self.screen, (0, 0, 0), self.zoneplayer)
+        screen.blit(self.txt_player, (self.zoneplayer.x+5, self.zoneplayer.y+10))
+        
+    def DrawSignOnMenu(self):
+        signscreen = pygame.Rect((1080/4)/2, 30, 785, 650)
+        pygame.draw.rect(self.screen, (50, 0, 80), signscreen)
+        self.input = pygame.Rect(145, 530, 765, 50)
+        pygame.draw.rect(self.screen, (50, 50, 50), self.input)
+        self.input_hitbox = pygame.Rect(145, 530, 765, 50)
+
+        self.font = pygame.font.Font(None, 45)
+        self.txt_surface = self.font.render(self.text, True, (0,0,0))
+        
+        # Blit the rect.
+        pygame.draw.rect(self.screen, (255, 255, 255), self.input)
 
     def gestion_events(self): # Permet de savoir se qu'il se passe sur le jeux, notamment les interaction par click de l'utilisateur
         for event in pygame.event.get():
@@ -102,7 +145,7 @@ class Game:
                         if pygame.Rect.collidepoint(self.bouton_skills_hitbox, event.pos):
                             self.menu = 3
                         if pygame.Rect.collidepoint(self.bouton_signin_hitbox, event.pos):
-                            print("SignIn")
+                            self.menu = 4
             elif self.menu == 2:
                 if event.type == pygame.MOUSEBUTTONUP:
                     if event.button == 1:
@@ -113,7 +156,25 @@ class Game:
                     if event.button == 1:
                         if pygame.Rect.collidepoint(self.bouton_menu, event.pos):
                             self.menu = 1
-
+            elif self.menu == 4:
+                if event.type == pygame.MOUSEBUTTONUP:
+                    if event.button == 1:
+                        if pygame.Rect.collidepoint(self.input, event.pos):
+                            self.active = True
+                        else:
+                            self.active = False
+                if self.active:
+                    if event.type == pygame.KEYDOWN:
+                        if event.key == pygame.K_RETURN:
+                            self.pseudo = self.text
+                            print(self.pseudo)
+                            self.text = ''
+                            self.active = False
+                        elif event.key == pygame.K_BACKSPACE:
+                            self.text = self.text[:-1]
+                        else:
+                            self.text += event.unicode
+            
 
     def display(self): # C'est ce qui permet d'afficher la fenetre
         if self.menu == 1: # c'est si on doit afficher le menu 
@@ -125,6 +186,11 @@ class Game:
 
         elif self.menu == 3:
             self.DrawSkillMenu()
+        
+        elif self.menu == 4:
+            self.DrawSignInMenu()
+            
+            
 
         pygame.display.flip()
 

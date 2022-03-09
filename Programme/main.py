@@ -12,6 +12,7 @@ class Game:
         self.menu = 1
 
 
+ 
     def DrawMainMenu(self):
         self.fond = pygame.image.load('../Font/pate.png').convert_alpha()
         self.fond = pygame.transform.scale(self.fond, (500, 500))
@@ -66,6 +67,27 @@ class Game:
         
         self.title = pygame.Rect(190, 20 , 1080-380, 70)
         pygame.draw.rect(self.screen, (35, 39, 42) , self.title)
+        
+        self.continue1 = pygame.Rect(120+20, 570, 170, 50)
+        pygame.draw.rect(self.screen,(0, 255, 0), self.continue1)
+        
+        self.continue1 = pygame.Rect(430+20, 570, 170, 50)
+        pygame.draw.rect(self.screen,(0, 255, 0), self.continue1)
+
+        self.continue1 = pygame.Rect(740+20, 570, 170, 50)
+        #pygame.draw.rect(self.screen,(0, 255, 0), self.continue1)
+        
+        self.create3 = pygame.Rect(760, 140+230, 170, 40)
+        pygame.draw.rect(self.screen,(0, 0, 0), self.create3)
+        
+        self.delete1 = pygame.Rect(210+80, 150, 30, 30)
+        pygame.draw.rect(self.screen,(255, 0, 0), self.delete1)
+        
+        # delete 2
+        
+        # delete 3 
+        
+
 
     def gestion_events(self): # Permet de savoir se qu'il se passe sur le jeux, notamment les interaction par click de l'utilisateur
         for event in pygame.event.get():

@@ -80,12 +80,15 @@ class Game:
         self.create3 = pygame.Rect(760, 140+230, 170, 40)
         pygame.draw.rect(self.screen,(0, 0, 0), self.create3)
         
-        self.delete1 = pygame.Rect(210+80, 150, 30, 30)
+        self.delete1 = pygame.Rect(120+170, 150, 30, 30)
         pygame.draw.rect(self.screen,(255, 0, 0), self.delete1)
         
         # delete 2
         
         # delete 3 
+        
+        self.copy1 = pygame.Rect(120+130, 150, 30, 30) # pour copié-collé une save
+        pygame.draw.rect(self.screen,(0, 0, 255), self.copy1)
         
 
 

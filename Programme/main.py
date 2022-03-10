@@ -90,6 +90,15 @@ class Game:
         self.copy1 = pygame.Rect(120+130, 150, 30, 30) # pour copié-collé une save
         pygame.draw.rect(self.screen,(0, 0, 255), self.copy1)
         
+    def DrawRegister(self):
+        self.fond = pygame.Rect(0, 0, 1080, 720)
+        pygame.draw.rect(self.screen, (44, 47, 51), self.fond)
+        
+        self.bouton_retour = pygame.Rect(20, 20, 50, 50)
+        pygame.draw.rect(self.screen,(255, 0, 50), self.bouton_retour)
+        
+        self.input_pseudo = InputBox(100, 100, 400, 80)
+
 
 
     def gestion_events(self): # Permet de savoir se qu'il se passe sur le jeux, notamment les interaction par click de l'utilisateur
@@ -97,6 +106,7 @@ class Game:
             
             if event.type == pygame.QUIT:
                 self.running = False
+            
 
             if self.menu == 1:
                 if event.type == pygame.MOUSEBUTTONUP: # Savoir si on relache un boutton de souris
@@ -105,19 +115,27 @@ class Game:
                             self.menu = 2
                         if pygame.Rect.collidepoint(self.bouton_quit_hitbox, event.pos):
                             self.running = False
-                        if pygame.Rect.collidepoint(self.bouton_skills_hitbox, event.pos):
-                            self.menu = 3
 
             elif self.menu == 2:
                 if event.type == pygame.MOUSEBUTTONUP:
                     if event.button == 1:
                         if pygame.Rect.collidepoint(self.bouton_retour, event.pos):
                             self.menu = 1
+                        if pygame.Rect.collidepoint(self.create3, event.pos):
+                            self.menu = 3
             elif self.menu == 3:
+                
+                if self.input_pseudo.active:
+                    
+                    self.input_pseudo.handle_event(event)
                 if event.type == pygame.MOUSEBUTTONUP:
                     if event.button == 1:
+                        if pygame.Rect.collidepoint(self.input_pseudo.rect, event.pos):
+                            self.input_pseudo.active = not self.input_pseudo.active
                         if pygame.Rect.collidepoint(self.bouton_retour, event.pos):
-                            self.menu = 1
+                            self.menu = 2
+                    
+                
             
             
     def display(self): # C'est ce qui permet d'afficher la fenetre
@@ -126,7 +144,11 @@ class Game:
 
         elif self.menu == 2: # afficher le menu de choix des parties
             self.DrawGame()
-
+        
+        elif self.menu == 3:
+            
+            self.DrawRegister()
+            
             
 
         pygame.display.flip()
@@ -134,6 +156,7 @@ class Game:
 
     def run(self):
         while self.running:
+            
             self.gestion_events()
             self.display()
             self.clock.tick(60)

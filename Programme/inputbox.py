@@ -16,13 +16,14 @@ class InputBox:
         self.active = False
 
     def handle_event(self, event):
-        if event.type == pg.MOUSEBUTTONDOWN:
+        if event.type == pg.MOUSEBUTTONUP:
             # If the user clicked on the input_box rect.
-            if self.rect.collidepoint(event.pos):
-                # Toggle the active variable.
-                self.active = not self.active
-            else:
-                self.active = False
+            if event.button == 1:
+                if self.rect.collidepoint(event.pos):
+                    # Toggle the active variable.
+                    self.active = not self.active
+                else:
+                    self.active = False
             # Change the current color of the input box.
             self.color = self.COLOR_ACTIVE if self.active else self.COLOR_INACTIVE
         if event.type == pg.KEYDOWN:

@@ -13,22 +13,27 @@ class InputBox:
         self.color = self.COLOR_INACTIVE
         self.text = text
         self.txt_surface = self.font.render(text, True, self.color)
-        self.active = False
+        self.active = True
 
     def handle_event(self, event):
+        print(self.active)
         if event.type == pg.MOUSEBUTTONUP:
+            print('Clicke')
             # If the user clicked on the input_box rect.
             if event.button == 1:
-                if self.rect.collidepoint(event.pos):
+                if pg.Rect.collidepoint(self.rect, event.pos):
+                    print('Activé')
                     # Toggle the active variable.
-                    self.active = not self.active
-                else:
-                    self.active = False
+                    self.active = True
+                
             # Change the current color of the input box.
             self.color = self.COLOR_ACTIVE if self.active else self.COLOR_INACTIVE
         if event.type == pg.KEYDOWN:
+            print("Clcikker")
             if self.active:
-                if event.key == pg.K_RETURN:
+                print(self.text)
+                if event.key == pg.K_0:
+                    print(2)
                     print(self.text)
                     self.text = ''
                 elif event.key == pg.K_BACKSPACE:

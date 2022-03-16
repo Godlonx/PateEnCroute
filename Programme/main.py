@@ -1,4 +1,4 @@
-
+import pygame_textinput
 import pygame
 import PlayerMob, start_game
 from inputbox import InputBox
@@ -97,7 +97,8 @@ class Game:
         self.bouton_retour = pygame.Rect(20, 20, 50, 50)
         pygame.draw.rect(self.screen,(255, 0, 50), self.bouton_retour)
         
-        self.input_pseudo = InputBox(100, 100, 400, 80)
+        self.input_pseudo = InputBox(100, 100, 200, 50)
+        self.input_pseudo.draw(self.screen)
 
 
 
@@ -122,11 +123,11 @@ class Game:
                         if pygame.Rect.collidepoint(self.bouton_retour, event.pos):
                             self.menu = 1
                         if pygame.Rect.collidepoint(self.create3, event.pos):
+                            self.DrawRegister()
                             self.menu = 3
             elif self.menu == 3:
-                
-                if self.input_pseudo.active:
-                    
+                if event.type == pygame.KEYDOWN or event.type == pygame.MOUSEBUTTONUP:
+                    print(1)
                     self.input_pseudo.handle_event(event)
                 if event.type == pygame.MOUSEBUTTONUP:
                     if event.button == 1:
@@ -134,11 +135,10 @@ class Game:
                             self.input_pseudo.active = not self.input_pseudo.active
                         if pygame.Rect.collidepoint(self.bouton_retour, event.pos):
                             self.menu = 2
-                    
                 
             
-            
-    def display(self): # C'est ce qui permet d'afficher la fenetre
+    def display(self):
+            # C'est ce qui permet d'afficher la fenetre
         if self.menu == 1: # afficher le menu 
             self.DrawMainMenu()
 
@@ -146,8 +146,9 @@ class Game:
             self.DrawGame()
         
         elif self.menu == 3:
-            
-            self.DrawRegister()
+            self.input_pseudo.draw(self.screen)
+
+        
             
             
 
@@ -156,10 +157,9 @@ class Game:
 
     def run(self):
         while self.running:
-            
-            self.gestion_events()
             self.display()
-            self.clock.tick(60)
+            self.gestion_events()
+            self.clock.tick(5)
 
 if __name__ == '__main__':
     pygame.init()

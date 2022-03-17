@@ -1,4 +1,4 @@
-import pygame_textinput
+
 import pygame
 import PlayerMob, start_game
 from inputbox import InputBox
@@ -132,7 +132,7 @@ class Game:
                 if event.type == pygame.MOUSEBUTTONUP:
                     if event.button == 1:
                         if pygame.Rect.collidepoint(self.input_pseudo.rect, event.pos):
-                            self.input_pseudo.active = not self.input_pseudo.active
+                            self.input_pseudo.active = True
                         if pygame.Rect.collidepoint(self.bouton_retour, event.pos):
                             self.menu = 2
                 
@@ -147,6 +147,7 @@ class Game:
         
         elif self.menu == 3:
             self.input_pseudo.draw(self.screen)
+            self.input_pseudo.update()
 
         
             

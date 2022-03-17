@@ -13,26 +13,15 @@ class InputBox:
         self.color = self.COLOR_INACTIVE
         self.text = text
         self.txt_surface = self.font.render(text, True, self.color)
-        self.active = True
+        self.active = False
 
     def handle_event(self, event):
         print(self.active)
-        if event.type == pg.MOUSEBUTTONUP:
-            print('Clicke')
-            # If the user clicked on the input_box rect.
-            if event.button == 1:
-                if pg.Rect.collidepoint(self.rect, event.pos):
-                    print('Activé')
-                    # Toggle the active variable.
-                    self.active = True
-                
-            # Change the current color of the input box.
-            self.color = self.COLOR_ACTIVE if self.active else self.COLOR_INACTIVE
         if event.type == pg.KEYDOWN:
             print("Clcikker")
             if self.active:
                 print(self.text)
-                if event.key == pg.K_0:
+                if event.key == pg.K_RETURN:
                     print(2)
                     print(self.text)
                     self.text = ''
@@ -40,12 +29,14 @@ class InputBox:
                     self.text = self.text[:-1]
                 else:
                     self.text += event.unicode
+                    print(self.text)
                 # Re-render the text.
                 self.txt_surface = self.font.render(self.text, True, self.color)
 
     def update(self):
         # Resize the box if the text is too long.
         width = max(200, self.txt_surface.get_width()+10)
+        self.txt_surface = self.font.render(None, True, self.color)
         self.rect.w = width
 
     def draw(self, screen):

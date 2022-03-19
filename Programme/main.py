@@ -97,9 +97,9 @@ class Game:
         self.bouton_retour = pygame.Rect(20, 20, 50, 50)
         pygame.draw.rect(self.screen,(255, 0, 50), self.bouton_retour)
         
-        self.input_pseudo = InputBox(100, 100, 200, 50)
-        self.input_pseudo.draw(self.screen)
-
+        self.input_pseudo3 = InputBox(100, 100, 200, 50)
+        
+        
 
 
     def gestion_events(self): # Permet de savoir se qu'il se passe sur le jeux, notamment les interaction par click de l'utilisateur
@@ -127,12 +127,15 @@ class Game:
                             self.menu = 3
             elif self.menu == 3:
                 if event.type == pygame.KEYDOWN or event.type == pygame.MOUSEBUTTONUP:
-                    print(1)
-                    self.input_pseudo.handle_event(event)
+                    self.input_pseudo3.handle_event(event)
+                    self.input_pseudo3.draw(self.screen)
+                    if event.key == pygame.K_RETURN:
+                        #Recup le psuedo, lance la fonction pour enrigstrer et initialiser les donné dans la BDD
+                        pass
                 if event.type == pygame.MOUSEBUTTONUP:
                     if event.button == 1:
-                        if pygame.Rect.collidepoint(self.input_pseudo.rect, event.pos):
-                            self.input_pseudo.active = True
+                        if pygame.Rect.collidepoint(self.input_pseudo3.rect, event.pos):
+                            self.input_pseudo3.active = True
                         if pygame.Rect.collidepoint(self.bouton_retour, event.pos):
                             self.menu = 2
                 
@@ -146,8 +149,7 @@ class Game:
             self.DrawGame()
         
         elif self.menu == 3:
-            self.input_pseudo.draw(self.screen)
-            self.input_pseudo.update()
+            self.input_pseudo3.draw(self.screen)
 
         
             

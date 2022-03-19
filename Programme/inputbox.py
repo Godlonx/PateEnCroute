@@ -20,27 +20,28 @@ class InputBox:
         if event.type == pg.KEYDOWN:
             print("Clcikker")
             if self.active:
-                print(self.text)
                 if event.key == pg.K_RETURN:
-                    print(2)
-                    print(self.text)
+                    
                     self.text = ''
                 elif event.key == pg.K_BACKSPACE:
+                    print(1)
                     self.text = self.text[:-1]
                 else:
                     self.text += event.unicode
-                    print(self.text)
                 # Re-render the text.
                 self.txt_surface = self.font.render(self.text, True, self.color)
+                
+
+
 
     def update(self):
         # Resize the box if the text is too long.
         width = max(200, self.txt_surface.get_width()+10)
-        self.txt_surface = self.font.render(None, True, self.color)
         self.rect.w = width
 
     def draw(self, screen):
         # Blit the text.
+        pg.draw.rect(screen, (0,0,0), self.rect)
         screen.blit(self.txt_surface, (self.rect.x+5, self.rect.y+5))
         # Blit the rect.
         pg.draw.rect(screen, self.color, self.rect, 2)

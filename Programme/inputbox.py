@@ -16,15 +16,11 @@ class InputBox:
         self.active = False
 
     def handle_event(self, event):
-        print(self.active)
         if event.type == pg.KEYDOWN:
-            print("Clcikker")
             if self.active:
                 if event.key == pg.K_RETURN:
-                    
                     self.text = ''
                 elif event.key == pg.K_BACKSPACE:
-                    print(1)
                     self.text = self.text[:-1]
                 else:
                     self.text += event.unicode

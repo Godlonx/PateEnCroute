@@ -11,108 +11,113 @@ class Game:
         self.running = True
         self.menu = 1
 
-
- 
-    def DrawMainMenu(self):
-        self.fond = pygame.image.load('../Font/pate.png').convert_alpha()
-        self.fond = pygame.transform.scale(self.fond, (500, 500))
-
-        self.fond2 = pygame.image.load('../Font/fond.jpg').convert()
-        self.fond2 = pygame.transform.scale(self.fond2, (1080, 720))
-        
-        screen.blit(self.fond2, (0, 0))
-        screen.blit(self.fond, (290, 110))
-       
-       
-        self.Titre = pygame.Rect(270, 50, 520, 150)
-        pygame.draw.rect(self.screen, (0, 0, 255), self.Titre)
-
-
-        self.bouton_start = pygame.image.load('../Font/Start.png')
-        self.bouton_start = pygame.transform.scale(self.bouton_start, (260, 260))
-        self.bouton_start_hitbox = pygame.Rect(40, 280, 260, 260)
-        
-        self.bouton_quit = pygame.image.load('../Font/Quit.png')
-        self.bouton_quit = pygame.transform.scale(self.bouton_quit, (260, 260))
-        self.bouton_quit_hitbox = pygame.Rect(410, 605, 260, 90)
- 
-        
-       
-        screen.blit(self.bouton_quit, (410, 525))
-        screen.blit(self.bouton_start, (40, 250))
-
-#2,5 * en titre , 80 + 260 = 340 => 170 
-
-    def DrawConnect(self):
-        self.fond = pygame.Rect(0, 0, 1080, 720)
-        pygame.draw.rect(self.screen, (44, 47, 51), self.fond)
-
-        self.title = pygame.Rect(190, 20 , 1080-380, 70)
-        pygame.draw.rect(self.screen, (35, 39, 42) , self.title)
-
-        self.bouton_retour = pygame.Rect(20, 20, 50, 50)
-        pygame.draw.rect(self.screen,(255, 0, 50), self.bouton_retour)
-
-        self.save1 = pygame.Rect(120, 140, 210, 500)
-        pygame.draw.rect(self.screen, (35, 39, 42) , self.save1)
-        self.save2 = pygame.Rect(430, 140, 210, 500)
-        pygame.draw.rect(self.screen, (35, 39, 42) , self.save2)
-        self.save3 = pygame.Rect(740, 140, 210, 500)
-        pygame.draw.rect(self.screen, (35, 39, 42) , self.save3)
-
-        sqliteConnection = connect('../Documents/StatsPlayers.db')
-        cursor = sqliteConnection.cursor()
-        cursor.execute("SELECT id From players")
-        info = cursor.fetchone()
-        
-        if info != None:
-            if 1 in info:
-                self.continue1 = pygame.Rect(120+20, 570, 170, 50)
-                pygame.draw.rect(self.screen,(0, 255, 0), self.continue1)
-                self.copy1 = pygame.Rect(120+130, 150, 30, 30)
-                pygame.draw.rect(self.screen,(0, 0, 255), self.copy1)
-                self.delete1 = pygame.Rect(120+170, 150, 30, 30)
-                pygame.draw.rect(self.screen,(255, 0, 0), self.delete1)
-        else:
-            self.create1 = pygame.Rect(140, 140+230, 170, 40)
-            pygame.draw.rect(self.screen,(0, 0, 0), self.create1)
-
-        if info != None:
-            if 2 in info:
-                self.continue2 = pygame.Rect(430+20, 570, 170, 50)
-                pygame.draw.rect(self.screen,(0, 255, 0), self.continue2)
-                self.copy2 = pygame.Rect(430+130, 150, 30, 30)
-                pygame.draw.rect(self.screen,(0, 0, 255), self.copy2)
-                self.delete2 = pygame.Rect(430+170, 150, 30, 30)
-                pygame.draw.rect(self.screen,(255, 0, 0), self.delete2)
-        else:
-            self.create2 = pygame.Rect(450, 140+230, 170, 40)
-            pygame.draw.rect(self.screen,(0, 0, 0), self.create2)
+    
+    def Draw_menu(self, num):
+        if num == 1:
+            self.fond = pygame.image.load('../Font/pate.png').convert_alpha()
+            self.fond = pygame.transform.scale(self.fond, (500, 500))
+    
+            self.fond2 = pygame.image.load('../Font/fond.jpg').convert()
+            self.fond2 = pygame.transform.scale(self.fond2, (1080, 720))
             
-        if info != None:
-            if 3 in info:
-                self.continue3 = pygame.Rect(740+20, 570, 170, 50)
-                pygame.draw.rect(self.screen,(0, 255, 0), self.continue3)
-                self.copy3 = pygame.Rect(740+130, 150, 30, 30)
-                pygame.draw.rect(self.screen,(0, 0, 255), self.copy3)
-                self.delete3 = pygame.Rect(740+170, 150, 30, 30)
-                pygame.draw.rect(self.screen,(255, 0, 0), self.delete3)
-        else:
-            self.create3 = pygame.Rect(760, 140+230, 170, 40)
-            pygame.draw.rect(self.screen,(0, 0, 0), self.create3)
+            screen.blit(self.fond2, (0, 0))
+            screen.blit(self.fond, (290, 110))
         
         
+            self.Titre = pygame.Rect(270, 50, 520, 150)
+            pygame.draw.rect(self.screen, (0, 0, 255), self.Titre)
+    
+    
+            self.bouton_start = pygame.image.load('../Font/Start.png')
+            self.bouton_start = pygame.transform.scale(self.bouton_start, (260, 260))
+            self.bouton_start_hitbox = pygame.Rect(40, 280, 260, 260)
+            
+            self.bouton_quit = pygame.image.load('../Font/Quit.png')
+            self.bouton_quit = pygame.transform.scale(self.bouton_quit, (260, 260))
+            self.bouton_quit_hitbox = pygame.Rect(410, 605, 260, 90)
+    
+            
         
-        # delete 2
-        
-        # delete 3 
-        
-        
-        
-        sqliteConnection.commit()
-        cursor.close()
+            screen.blit(self.bouton_quit, (410, 525))
+            screen.blit(self.bouton_start, (40, 250))
 
+        elif num == 2: # afficher le menu de choix des parties
+            self.fond = pygame.Rect(0, 0, 1080, 720)
+            pygame.draw.rect(self.screen, (44, 47, 51), self.fond)
+    
+            self.title = pygame.Rect(190, 20 , 1080-380, 70)
+            pygame.draw.rect(self.screen, (35, 39, 42) , self.title)
+    
+            self.bouton_retour = pygame.Rect(20, 20, 50, 50)
+            pygame.draw.rect(self.screen,(255, 0, 50), self.bouton_retour)
+    
+            self.save1 = pygame.Rect(120, 140, 210, 500)
+            pygame.draw.rect(self.screen, (35, 39, 42) , self.save1)
+            self.save2 = pygame.Rect(430, 140, 210, 500)
+            pygame.draw.rect(self.screen, (35, 39, 42) , self.save2)
+            self.save3 = pygame.Rect(740, 140, 210, 500)
+            pygame.draw.rect(self.screen, (35, 39, 42) , self.save3)
+    
+            sqliteConnection = connect('../Documents/StatsPlayers.db')
+            cursor = sqliteConnection.cursor()
+            cursor.execute("SELECT id From players")
+            info = cursor.fetchone()
+            
+            if info != None:
+                if 1 in info:
+                    self.continue1 = pygame.Rect(120+20, 570, 170, 50)
+                    pygame.draw.rect(self.screen,(0, 255, 0), self.continue1)
+                    self.copy1 = pygame.Rect(120+130, 150, 30, 30)
+                    pygame.draw.rect(self.screen,(0, 0, 255), self.copy1)
+                    self.delete1 = pygame.Rect(120+170, 150, 30, 30)
+                    pygame.draw.rect(self.screen,(255, 0, 0), self.delete1)
+            else:
+                self.create1 = pygame.Rect(140, 140+230, 170, 40)
+                pygame.draw.rect(self.screen,(0, 0, 0), self.create1)
+    
+            if info != None:
+                if 2 in info:
+                    self.continue2 = pygame.Rect(430+20, 570, 170, 50)
+                    pygame.draw.rect(self.screen,(0, 255, 0), self.continue2)
+                    self.copy2 = pygame.Rect(430+130, 150, 30, 30)
+                    pygame.draw.rect(self.screen,(0, 0, 255), self.copy2)
+                    self.delete2 = pygame.Rect(430+170, 150, 30, 30)
+                    pygame.draw.rect(self.screen,(255, 0, 0), self.delete2)
+            else:
+                self.create2 = pygame.Rect(450, 140+230, 170, 40)
+                pygame.draw.rect(self.screen,(0, 0, 0), self.create2)
+                
+            if info != None:
+                if 3 in info:
+                    self.continue3 = pygame.Rect(740+20, 570, 170, 50)
+                    pygame.draw.rect(self.screen,(0, 255, 0), self.continue3)
+                    self.copy3 = pygame.Rect(740+130, 150, 30, 30)
+                    pygame.draw.rect(self.screen,(0, 0, 255), self.copy3)
+                    self.delete3 = pygame.Rect(740+170, 150, 30, 30)
+                    pygame.draw.rect(self.screen,(255, 0, 0), self.delete3)
+            else:
+                self.create3 = pygame.Rect(760, 140+230, 170, 40)
+                pygame.draw.rect(self.screen,(0, 0, 0), self.create3)
+            
+            
+            
+            # delete 2
+            
+            # delete 3 
+            
+            
+            
+            sqliteConnection.commit()
+            cursor.close()
+    
 
+        
+        elif num == 3:
+            self.input_pseudo3.draw(self.screen)
+
+        
+#2,5 * en titre , 80 + 260 = 340 => 170 
+        
     def DrawRegister(self):
         self.fond = pygame.Rect(0, 0, 1080, 720)
         pygame.draw.rect(self.screen, (44, 47, 51), self.fond)
@@ -166,15 +171,7 @@ class Game:
             
     def display(self):
             # C'est ce qui permet d'afficher la fenetre
-        if self.menu == 1: # afficher le menu 
-            self.DrawMainMenu()
-
-        elif self.menu == 2: # afficher le menu de choix des parties
-            self.DrawConnect()
-        
-        elif self.menu == 3:
-            self.input_pseudo3.draw(self.screen)
-
+        self.Draw_menu(self.menu)
         
             
             

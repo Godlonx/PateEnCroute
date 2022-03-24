@@ -1,0 +1,34 @@
+Cahier des charges
+
+
+Groupe : Serge Harghel, Erwann Ruelle, Loch’lan Guillou et Rémi Laurent
+
+
+Contexte:
+	Projet de fin d’année en groupe, ce projet est un programme python mobilisant les connaissances que l’on a acquis au cour de l’année.
+
+Projet:
+	Création d’un jeu nommé « Paté en croute »
+
+Contraintes:
+	Utilisation des connaissance de l’année:
+    • Base de données
+    • Interface et implémentation
+    • Listes, piles et files
+    • Arbres
+    • Graphes
+    • Programmation orienté objet
+
+Présentation:
+	Ce jeu est inspiré de la licence «Plantes VS Zombies», un sorte de parodie dans lequel les Plantes sont représente par les Pâtés et les Zombie par des Plantes. Ce jeu combine le style de jeux «Tower Defense» (défendre une «base» de plusieurs vagues d’ennemis a l’aide de «tours») et le style « Rogue-like » ( recommencé le jeu du début a chaque mort avec des amélioration en plus a chaque fois.). Il possède un ensemble large de Pâté et de Plantes.
+
+
+Spécification:
+
+Class Game():
+ => run() -> None
+	Permet de faire les rafraichissment de toutes les fonction pour faire tourner le jeu.
+ => display() -> None
+	Permet d’afficher la fenetre 
+ => gevents() -> None
+	Permet de gérer les evenement sur la fenetre comme des click

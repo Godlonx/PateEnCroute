@@ -28,11 +28,7 @@ Spécification:
 Class Game():
  => run() -> None
 	Permet de faire les rafraichissment de toutes les fonction pour faire tourner le jeu.
-
  => display() -> None
-	Permet d’afficher la fenetre
-
+	Permet d’afficher la fenetre 
  => gevents() -> None
 	Permet de gérer les evenement sur la fenetre comme des click
-
- => 

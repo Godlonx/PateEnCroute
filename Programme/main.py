@@ -9,7 +9,9 @@ class Game:
         self.screen = screen
         self.clock = pygame.time.Clock()
         self.running = True
-        self.menu = 1
+        self.menu = 4
+        self.affiche = 0
+        self.t_case = 100
 
     
     def Draw_menu(self, num):
@@ -114,7 +116,23 @@ class Game:
         
         elif num == 3:
             self.input_pseudo3.draw(self.screen)
-
+        
+        elif num == 4:
+            
+            
+            if self.affiche == 0:
+                self.fond = pygame.Rect(0, 0, 1080, 720)
+                pygame.draw.rect(self.screen, (44, 47, 51), self.fond)
+                self.steaks_inf = pygame.Rect(10, 10, 60, 60)
+                pygame.draw.rect(self.screen, (0, 0, 255), self.steaks_inf)
+                self.wave_inf = pygame.Rect(900, 620, 100, 50)
+                pygame.draw.rect(self.screen, (0, 0, 255), self.wave_inf)
+                for i in range(5):
+                    for j in range(9):
+                        self.case = pygame.Rect(150+j*self.t_case, 150+i*self.t_case, self.t_case, self.t_case)
+                        pygame.draw.rect(self.screen, (0+j*4,255-(j+i)*6,0+i*4), self.case)
+            self.affiche = 1
+            
         
 #2,5 * en titre , 80 + 260 = 340 => 170 
         
@@ -183,7 +201,7 @@ class Game:
         while self.running:
             self.display()
             self.gestion_events()
-            self.clock.tick(5)
+            self.clock.tick(60)
 
 if __name__ == '__main__':
     pygame.init()

@@ -10,7 +10,6 @@ class Game:
         self.clock = pygame.time.Clock()
         self.running = True
         self.menu = 1
-
     
     def Draw_menu(self, num):
         if num == 1:
@@ -61,40 +60,37 @@ class Game:
             sqliteConnection = connect('../Documents/StatsPlayers.db')
             cursor = sqliteConnection.cursor()
             cursor.execute("SELECT id From players")
-            info = cursor.fetchone()
+            info = cursor.fetchall()
             
-            if info != None:
-                if 1 in info:
-                    self.continue1 = pygame.Rect(120+20, 570, 170, 50)
-                    pygame.draw.rect(self.screen,(0, 255, 0), self.continue1)
-                    self.copy1 = pygame.Rect(120+130, 150, 30, 30)
-                    pygame.draw.rect(self.screen,(0, 0, 255), self.copy1)
-                    self.delete1 = pygame.Rect(120+170, 150, 30, 30)
-                    pygame.draw.rect(self.screen,(255, 0, 0), self.delete1)
+            if info != None and (1,) in info:
+                self.continue1 = pygame.Rect(120+20, 570, 170, 50)
+                pygame.draw.rect(self.screen,(0, 255, 0), self.continue1)
+                self.copy1 = pygame.Rect(120+130, 150, 30, 30)
+                pygame.draw.rect(self.screen,(0, 0, 255), self.copy1)
+                self.delete1 = pygame.Rect(120+170, 150, 30, 30)
+                pygame.draw.rect(self.screen,(255, 0, 0), self.delete1)
             else:
                 self.create1 = pygame.Rect(140, 140+230, 170, 40)
                 pygame.draw.rect(self.screen,(0, 0, 0), self.create1)
     
-            if info != None:
-                if 2 in info:
-                    self.continue2 = pygame.Rect(430+20, 570, 170, 50)
-                    pygame.draw.rect(self.screen,(0, 255, 0), self.continue2)
-                    self.copy2 = pygame.Rect(430+130, 150, 30, 30)
-                    pygame.draw.rect(self.screen,(0, 0, 255), self.copy2)
-                    self.delete2 = pygame.Rect(430+170, 150, 30, 30)
-                    pygame.draw.rect(self.screen,(255, 0, 0), self.delete2)
+            if info != None and (2,) in info:
+                self.continue2 = pygame.Rect(430+20, 570, 170, 50)
+                pygame.draw.rect(self.screen,(0, 255, 0), self.continue2)
+                self.copy2 = pygame.Rect(430+130, 150, 30, 30)
+                pygame.draw.rect(self.screen,(0, 0, 255), self.copy2)
+                self.delete2 = pygame.Rect(430+170, 150, 30, 30)
+                pygame.draw.rect(self.screen,(255, 0, 0), self.delete2)
             else:
                 self.create2 = pygame.Rect(450, 140+230, 170, 40)
                 pygame.draw.rect(self.screen,(0, 0, 0), self.create2)
                 
-            if info != None:
-                if 3 in info:
-                    self.continue3 = pygame.Rect(740+20, 570, 170, 50)
-                    pygame.draw.rect(self.screen,(0, 255, 0), self.continue3)
-                    self.copy3 = pygame.Rect(740+130, 150, 30, 30)
-                    pygame.draw.rect(self.screen,(0, 0, 255), self.copy3)
-                    self.delete3 = pygame.Rect(740+170, 150, 30, 30)
-                    pygame.draw.rect(self.screen,(255, 0, 0), self.delete3)
+            if info != None and (3,) in info:
+                self.continue3 = pygame.Rect(740+20, 570, 170, 50)
+                pygame.draw.rect(self.screen,(0, 255, 0), self.continue3)
+                self.copy3 = pygame.Rect(740+130, 150, 30, 30)
+                pygame.draw.rect(self.screen,(0, 0, 255), self.copy3)
+                self.delete3 = pygame.Rect(740+170, 150, 30, 30)
+                pygame.draw.rect(self.screen,(255, 0, 0), self.delete3)
             else:
                 self.create3 = pygame.Rect(760, 140+230, 170, 40)
                 pygame.draw.rect(self.screen,(0, 0, 0), self.create3)
@@ -115,6 +111,20 @@ class Game:
         elif num == 3:
             self.input_pseudo3.draw(self.screen)
 
+        elif num == 4:
+            self.fond = pygame.Rect(0, 0, 1080, 720)
+            pygame.draw.rect(self.screen, (44, 47, 51), self.fond)
+
+            self.world1 = pygame.Rect(150, (720-70)/2, 70, 70)
+            pygame.draw.rect(self.screen, (255, 0, 0), self.world1)
+            
+            self.world2 = pygame.Rect(350, (720-70)/4, 70, 70)
+            pygame.draw.rect(self.screen, (0, 255, 0), self.world2)
+
+            self.world3 = pygame.Rect(350, 3*((720-70)/4), 70, 70)
+            pygame.draw.rect(self.screen, (0, 255, 0), self.world3)
+
+
         
 #2,5 * en titre , 80 + 260 = 340 => 170 
         
@@ -126,6 +136,7 @@ class Game:
         pygame.draw.rect(self.screen,(255, 0, 50), self.bouton_retour)
         
         self.input_pseudo3 = InputBox(100, 100, 200, 50)
+        self.input_pseudo3.id = 3
         
         
 
@@ -159,7 +170,13 @@ class Game:
                     self.input_pseudo3.draw(self.screen)
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_RETURN:
-                        pass
+                        
+                        text = self.input_pseudo3.text
+                        print(text, isinstance(text, str))
+                        id = self.input_pseudo3.id
+                        self.db("Insert into players(id, pseudo) VALUES(?, ?)", (id, text))
+                        self.menu = 4
+                        
                         #Recup le psuedo, lance la fonction pour enrigstrer et initialiser les donné dans la BDD
                 if event.type == pygame.MOUSEBUTTONUP:
                     if event.button == 1:
@@ -167,8 +184,8 @@ class Game:
                             self.input_pseudo3.active = True
                         if pygame.Rect.collidepoint(self.bouton_retour, event.pos):
                             self.menu = 2
-                
-            
+
+
     def display(self):
             # C'est ce qui permet d'afficher la fenetre
         self.Draw_menu(self.menu)
@@ -178,12 +195,22 @@ class Game:
 
         pygame.display.flip()
 
-
+    def db(self, request, data=None, type=None):
+        sqliteConnection = connect('../Documents/StatsPlayers.db')
+        cursor = sqliteConnection.cursor()
+        info = None
+        cursor.execute(request, data)
+        if type == "recup":
+            info = cursor.fetchall()
+        sqliteConnection.commit()
+        cursor.close()
+        return info
+    
     def run(self):
         while self.running:
             self.display()
             self.gestion_events()
-            self.clock.tick(5)
+            self.clock.tick(60)
 
 if __name__ == '__main__':
     pygame.init()

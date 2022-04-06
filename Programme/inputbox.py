@@ -12,16 +12,17 @@ class InputBox:
         self.rect = pg.Rect(x, y, w, h)
         self.color = self.COLOR_INACTIVE
         self.text = text
+        self.id = 0
         self.txt_surface = self.font.render(text, True, self.color)
         self.active = False
 
     def handle_event(self, event):
         if event.type == pg.KEYDOWN:
             if self.active:
-                if event.key == pg.K_RETURN:
-                    self.text = ''
-                elif event.key == pg.K_BACKSPACE:
+                if event.key == pg.K_BACKSPACE:
                     self.text = self.text[:-1]
+                elif event.key == pg.K_RETURN:
+                    pass
                 else:
                     self.text += event.unicode
                 # Re-render the text.

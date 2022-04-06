@@ -2,6 +2,7 @@ from sqlite3 import *
 import pygame
 import PlayerMob, start_game
 from inputbox import InputBox
+from plateau import Terrain
 
 
 class Game:
@@ -9,7 +10,7 @@ class Game:
         self.screen = screen
         self.clock = pygame.time.Clock()
         self.running = True
-        self.menu = 4
+        self.menu = 1
         self.affiche = 0
         self.t_case = 100
 
@@ -118,20 +119,8 @@ class Game:
             self.input_pseudo3.draw(self.screen)
         
         elif num == 4:
-            
-            
-            if self.affiche == 0:
-                self.fond = pygame.Rect(0, 0, 1080, 720)
-                pygame.draw.rect(self.screen, (44, 47, 51), self.fond)
-                self.steaks_inf = pygame.Rect(10, 10, 60, 60)
-                pygame.draw.rect(self.screen, (0, 0, 255), self.steaks_inf)
-                self.wave_inf = pygame.Rect(900, 620, 100, 50)
-                pygame.draw.rect(self.screen, (0, 0, 255), self.wave_inf)
-                for i in range(5):
-                    for j in range(9):
-                        self.case = pygame.Rect(150+j*self.t_case, 150+i*self.t_case, self.t_case, self.t_case)
-                        pygame.draw.rect(self.screen, (0+j*4,255-(j+i)*6,0+i*4), self.case)
-            self.affiche = 1
+            self.terrain = Terrain()
+            self.terrain.draw(self.screen)
             
         
 #2,5 * en titre , 80 + 260 = 340 => 170 

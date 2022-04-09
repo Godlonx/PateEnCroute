@@ -35,9 +35,7 @@ class Game:
             self.bouton_quit = pygame.image.load('../Font/Quit.png')
             self.bouton_quit = pygame.transform.scale(self.bouton_quit, (260, 260))
             self.bouton_quit_hitbox = pygame.Rect(410, 605, 260, 90)
-    
             
-        
             screen.blit(self.bouton_quit, (410, 525))
             screen.blit(self.bouton_start, (40, 250))
 

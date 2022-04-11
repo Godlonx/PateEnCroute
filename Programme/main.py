@@ -10,7 +10,7 @@ class Game:
         self.screen = screen
         self.clock = pygame.time.Clock()
         self.running = True
-        self.menu = 'Title'
+        self.menu = 'account'
     
     def Draw_menu(self, num):
         if num == 'Title':
@@ -21,10 +21,9 @@ class Game:
         
         elif num == 'connect':
             self.input_pseudo.draw(self.screen)
-        
-        elif num == 'map_univers':
-            # affiche la carte du monde
-            self.menu = 'terrain'
+
+        elif num == 'party':
+            self.DrawParty()
             
         elif num == 'map_monde':
             # affiche les niveau dispo dans le monde choisis
@@ -32,6 +31,8 @@ class Game:
             
         elif num == 'terrain':
             self.terrain = Terrain()
+            self.terrain.draw(self.screen)
+        elif num == 'pause':
             self.terrain.draw(self.screen)
 
             
@@ -54,17 +55,37 @@ class Game:
 
         self.bouton_start = pygame.image.load('../Font/Start.png')
         self.bouton_start = pygame.transform.scale(self.bouton_start, (260, 260))
-        self.bouton_start_hitbox = pygame.Rect(40, 280, 260, 260)
+        self.bouton_start_hitbox = pygame.Rect(40, 330, 260, 90)
         
         self.bouton_quit = pygame.image.load('../Font/Quit.png')
         self.bouton_quit = pygame.transform.scale(self.bouton_quit, (260, 260))
         self.bouton_quit_hitbox = pygame.Rect(410, 605, 260, 90)
-
         
-    
+
+
         screen.blit(self.bouton_quit, (410, 525))
         screen.blit(self.bouton_start, (40, 250))
     
+    def DrawParty(self):
+        self.fond = pygame.Rect(0, 0, 1080, 720)
+        pygame.draw.rect(self.screen, (44, 47, 51), self.fond)
+
+        self.Titre = pygame.Rect(270, 50, 520, 150)
+        pygame.draw.rect(self.screen, (0, 0, 255), self.Titre)
+
+        self.bouton_start = pygame.image.load('../Font/Start.png')
+        self.bouton_start = pygame.transform.scale(self.bouton_start, (260, 260))
+        self.bouton_start_hitbox = pygame.Rect(410, 260, 260, 260)
+        
+        self.bouton_option = pygame.Rect(410, 400, 260, 90)
+        pygame.draw.rect(self.screen, (50, 150, 50), self.bouton_option)
+
+        self.bouton_stats = pygame.Rect(410, 540, 260, 90)
+        pygame.draw.rect(self.screen, (250, 150, 50), self.bouton_stats)
+        
+        
+        screen.blit(self.bouton_start, (410, 180))
+        
     def DrawAccount(self):
         self.fond = pygame.Rect(0, 0, 1080, 720)
         pygame.draw.rect(self.screen, (44, 47, 51), self.fond)
@@ -182,7 +203,7 @@ class Game:
                         print(text, isinstance(text, str))
                         id = self.input_pseudo.id
                         self.db("Insert into players(id, pseudo) VALUES(?, ?)", (id, text))
-                        self.menu = 'map_univers'
+                        self.menu = 'party'
                         
                         #Recup le psuedo, lance la fonction pour enrigstrer et initialiser les donné dans la BDD
                 if event.type == pygame.MOUSEBUTTONUP:

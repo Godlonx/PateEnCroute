@@ -16,7 +16,7 @@ class Terrain:
         pygame.draw.rect(screen, (0, 0, 255), self.steaks_inf)
 
         self.pause = pygame.Rect(990, 10, 60, 60) # Button pause in game (option, quitter, reprendre)
-        pygame.draw.rect(screen, (255, 0, 0), self.pause_inf)
+        pygame.draw.rect(screen, (255, 0, 0), self.pause)
 
         self.wave_inf = pygame.Rect(900, 670, 150, 20) # penser à modifier la taille en fonction du nombre de wave
         pygame.draw.rect(screen, (0, 0, 255), self.wave_inf)

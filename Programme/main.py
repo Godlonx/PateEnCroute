@@ -145,13 +145,16 @@ class Game:
             pygame.draw.rect(self.screen,(0, 0, 0), self.create3)
 
     def DrawRegister(self, account):
-        self.fond = pygame.Rect(0, 0, 1080, 720)
+        self.fond = pygame.Rect(390, 210, 300, 300)
         pygame.draw.rect(self.screen, (44, 47, 51), self.fond)
         
-        self.bouton_retour = pygame.Rect(20, 20, 50, 50)
+        self.fond = pygame.Rect(390, 210, 300, 300)
+        pygame.draw.rect(self.screen, (0, 0, 0), self.fond, 2)
+
+        self.bouton_retour = pygame.Rect(620, 230, 50, 50)
         pygame.draw.rect(self.screen,(255, 0, 50), self.bouton_retour)
         
-        self.input_pseudo = InputBox(100, 100, 200, 50)
+        self.input_pseudo = InputBox(440, 400, 200, 50) # X, Y, Longeur, Hauteur
 
         if account == 1:
             self.input_pseudo.id = 1

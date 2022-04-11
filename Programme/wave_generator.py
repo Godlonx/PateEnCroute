@@ -56,12 +56,7 @@ class Wave():
 
 
         return select
-
-
-
-
-
-
+        
 def testproba(val, pwr, diff): # sert a testé le pourcentage de chance de pop d'un mob dans une compo avec plein de paramètre
     nbr = 0
     for i in range(10000):

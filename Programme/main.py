@@ -4,7 +4,6 @@ import PlayerMob, start_game
 from inputbox import InputBox
 from plateau import Terrain
 
-
 class Game:
     def __init__(self, screen):
         self.screen = screen
@@ -15,29 +14,21 @@ class Game:
     def Draw_menu(self, num):
         if num == 'Title':
             self.DrawTitle()
-
         elif num == 'account': # afficher le menu de choix des parties
-            self.DrawAccount()
-        
+            self.DrawAccount()   
         elif num == 'connect':
             self.input_pseudo.draw(self.screen)
-
         elif num == 'party':
-            self.DrawParty()
-            
+            self.DrawParty()        
         elif num == 'map_monde':
             # affiche les niveau dispo dans le monde choisis
-            pass
-            
+            pass          
         elif num == 'terrain':
             self.terrain = Terrain()
             self.terrain.draw(self.screen)
         elif num == 'pause':
             self.terrain.draw(self.screen)
 
-            
-
-#2,5 * en titre , 80 + 260 = 340 => 170
     def DrawTitle(self):
         self.fond = pygame.image.load('../Font/pate.png').convert_alpha()
         self.fond = pygame.transform.scale(self.fond, (500, 500))
@@ -168,7 +159,6 @@ class Game:
             
             if event.type == pygame.QUIT:
                 self.running = False
-            
 
             if self.menu == 'Title':
                 if event.type == pygame.MOUSEBUTTONUP: # Savoir si on relache un boutton de souris
@@ -215,6 +205,12 @@ class Game:
                             self.input_pseudo.active = True
                         if pygame.Rect.collidepoint(self.bouton_retour, event.pos):
                             self.menu = 'account'
+            
+            elif self.menu == 'party':
+                if event.type == pygame.MOUSEBUTTONUP:
+                    if event.button == 1:
+                        if pygame.Rect.collidepoint(self.bouton_start_hitbox, event.pos):
+                            self.menu = 'map_monde'
 
     def display(self):
             # C'est ce qui permet d'afficher la fenetre

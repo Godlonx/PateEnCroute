@@ -29,7 +29,7 @@ class Wave():
         self.val_pwr = val_pwr
         self.difficulty = difficulty
         self.diff_lvl = 0
-        self.mob_dispo
+        self.mob_dispo = []
 
         self.flag = 1
         self.mob_spawn_list = creer_file_vide # file a défilé pour savoir quelle mob spawn
@@ -37,6 +37,19 @@ class Wave():
 
     def bestiare_dispo(self):
         pass # récupéré depuis la database tout les mobs du monde: "self.monde"
+        # print(p.db('Select nom,pwr_lvl,id from Plantes'))
+
+
+    def db(self, request):
+        sqliteConnection = connect('../Documents/StatsPlayers.db')
+        cursor = sqliteConnection.cursor()
+        cursor.execute(request)
+        info = cursor.fetchall()
+        sqliteConnection.commit()
+        cursor.close()
+        return info
+
+
 
 
 
@@ -56,7 +69,7 @@ class Wave():
 
 
         return select
-        
+
 def testproba(val, pwr, diff): # sert a testé le pourcentage de chance de pop d'un mob dans une compo avec plein de paramètre
     nbr = 0
     for i in range(10000):

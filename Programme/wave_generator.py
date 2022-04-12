@@ -38,6 +38,21 @@ class Wave():
     def bestiare_dispo(self):
         pass # récupéré depuis la database tout les mobs du monde: "self.monde"
         # print(p.db('Select nom,pwr_lvl,id from Plantes'))
+        idmob = self.db('Select bestiaire from Mondes where id like ' + str(self.monde))
+        idmob = list(idmob[0][0])
+        idmob2 = []
+        stock = ''
+        for i in range(len(idmob)):
+            if idmob[i] == '(' or idmob[i] == ')' or idmob[i] == ',':
+                if stock != '':
+                    idmob2.append(int(stock))
+                    stock = ''
+            else:
+                stock = stock + idmob[i]
+        print(idmob2)
+        for j in range(len(idmob2)):
+            self.mob_dispo.append(self.db('Select nom,pwr_lvl,id from Plantes where id like ' + str(idmob2[j])))
+        print(self.mob_dispo)
 
 
     def db(self, request):
@@ -56,13 +71,13 @@ class Wave():
     def mixeur_wave(self): # self.mob_dispo : tout les mobs présent dans se monde > sert a savoir quelle mob sont séléctionnable pour se lvl. self.difficulty : indice de modificateur de difficulté, où 0 = quasi pacifique, 1 = facile, 2 = normal ect. self.val_pwr : indice de la puissance disponnible pour créer une séléction de mob > sert a donné une valeur de difficulté pour un niveau comme lvl1 = 10, lvl2 = 20 et lvl4 = 30.
         select = []
         for i in range(len(self.mob_dispo)):
-            if self.mob_dispo[i][1] == -1:
-                select.append(self.mob_dispo[i][0])
-            elif self.mob_dispo[i][1] > 0 <= self.val_pwr:
-                print((self.mob_dispo[i][0], testproba(self.mob_dispo[i][1], self.val_pwr, self.difficulty))) # sert pour test
-                if randint(0,int((1 + self.mob_dispo[i][1]) * 4)) <= int((self.val_pwr / 2) * (1 + ((self.difficulty * 2) / 10))):
-                    select.append(self.mob_dispo[i][0])
-                    self.diff_lvl += self.mob_dispo[i][1]
+            if self.mob_dispo[i][0][1] == -1:
+                select.append(self.mob_dispo[i][0][0])
+            elif self.mob_dispo[i][0][1] > 0 <= self.val_pwr:
+                print((self.mob_dispo[i][0][0], testproba(self.mob_dispo[i][0][1], self.val_pwr, self.difficulty))) # sert pour test
+                if randint(0,int((1 + self.mob_dispo[i][0][1]) * 4)) <= int((self.val_pwr / 2) * (1 + ((self.difficulty * 2) / 10))):
+                    select.append(self.mob_dispo[i][0][0])
+                    self.diff_lvl += self.mob_dispo[i][0][1]
         # diff_lvl peut servir a voir si la difficulté est trop haute ou trop basse par rapport a la moyenne et alors ajustez la difficulté avec des évenemnts aléatoires, terrains plus compliqué et/ou condition de victoire...
 
 

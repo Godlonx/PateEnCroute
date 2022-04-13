@@ -20,7 +20,7 @@ tab_test = [('Tofu',-1),('Citron',1),('Brocogneur',3),('Olive',2),('Noix de coco
 # 2 = normal
 # 3 = difficile
 
-## les valeurs de puissances des mondes (val_pwr) : exemple possible : niveau 1/5 = 10, niveau 2/5 = 20, niveau 4/5 = 30 et niveau 3/5 et 5/5 = mini jeu et BOSS.
+## les valeurs de puissances des mondes (val_pwr) : exemple possible : niveau 1/5 = 10, niveau 2/5 = 15, niveau 4/5 = 20 et niveau 3/5 et 5/5 = mini jeu et BOSS.
 
 
 class Wave():
@@ -32,6 +32,7 @@ class Wave():
         self.mob_dispo = []
 
         self.flag = 1
+        self.chall = []
         self.mob_spawn_list = creer_file_vide # file a défilé pour savoir quelle mob spawn
 
 
@@ -68,27 +69,63 @@ class Wave():
 
 
 
-    def mixeur_wave(self): # self.mob_dispo : tout les mobs présent dans se monde > sert a savoir quelle mob sont séléctionnable pour se lvl. self.difficulty : indice de modificateur de difficulté, où 0 = quasi pacifique, 1 = facile, 2 = normal ect. self.val_pwr : indice de la puissance disponnible pour créer une séléction de mob > sert a donné une valeur de difficulté pour un niveau comme lvl1 = 10, lvl2 = 20 et lvl4 = 30.
+    def mixeur_wave(self): # self.mob_dispo : tout les mobs présent dans se monde > sert a savoir quelle mob sont séléctionnable pour se lvl. self.difficulty : indice de modificateur de difficulté, où 0 = quasi pacifique, 1 = facile, 2 = normal ect. self.val_pwr : indice de la puissance disponnible pour créer une séléction de mob > sert a donné une valeur de difficulté pour un niveau comme lvl1 = 10, lvl2 = 15 et lvl4 = 20.
         select = []
         for i in range(len(self.mob_dispo)):
             if self.mob_dispo[i][0][1] == -1:
                 select.append(self.mob_dispo[i][0][0])
             elif self.mob_dispo[i][0][1] > 0 <= self.val_pwr:
                 print((self.mob_dispo[i][0][0], testproba(self.mob_dispo[i][0][1], self.val_pwr, self.difficulty))) # sert pour test
-                if randint(0,int((1 + self.mob_dispo[i][0][1]) * 4)) <= int((self.val_pwr / 2) * (1 + ((self.difficulty * 2) / 10))):
+                if randint(0,int((1 + self.mob_dispo[i][0][1]) * 5)) <= int((self.val_pwr / 2) * (1 + ((self.difficulty * 2) / 10))):
                     select.append(self.mob_dispo[i][0][0])
                     self.diff_lvl += self.mob_dispo[i][0][1]
         # diff_lvl peut servir a voir si la difficulté est trop haute ou trop basse par rapport a la moyenne et alors ajustez la difficulté avec des évenemnts aléatoires, terrains plus compliqué et/ou condition de victoire...
+        return select, self.diff_lvl
+
+
+    def challenge(self):
+        diff = self.val_pwr - self.diff_lvl
+        if diff >= 12:
+            self.chall.append(4) # id : Chall Hard
+        elif diff >= 8:
+            self.chall.append(3) # id : Chall normal
+        elif diff >= 4:
+            self.chall.append(2) # id : Chall ez
+        elif diff >= 0:
+            self.chall.append(1) # id : No Chall
+        else:
+            self.chall.append(0) # id : Chall bonus / aide
+        self.flag = int(2 + ((diff + self.difficulty * 3 - 4) / 10))
 
 
 
 
-        return select
+
+
+    def create_wave(self):
+        self.bestiare_dispo()
+        print(self.mixeur_wave())
+        self.challenge()
+        print(self.flag)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 def testproba(val, pwr, diff): # sert a testé le pourcentage de chance de pop d'un mob dans une compo avec plein de paramètre
     nbr = 0
     for i in range(10000):
-        if randint(0,int((1 + val) * 4)) <= int((pwr / 2) * (1 + ((diff * 2) / 10))):
+        if randint(0,int((1 + val) * 5)) <= int((pwr / 2) * (1 + ((diff * 2) / 10))):
             nbr = nbr + 1
     return nbr / 100
 

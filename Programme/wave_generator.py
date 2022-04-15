@@ -33,7 +33,8 @@ class Wave():
 
         self.flag = 1
         self.chall = []
-        self.mob_spawn_list = creer_file_vide # file a défilé pour savoir quelle mob spawn
+        self.compo = []
+        self.mob_spawn_list = [] # tab a défilé pour savoir quelle mob spawn
 
 
     def bestiare_dispo(self):
@@ -52,7 +53,7 @@ class Wave():
                 stock = stock + idmob[i]
         print(idmob2)
         for j in range(len(idmob2)):
-            self.mob_dispo.append(self.db('Select nom,pwr_lvl,id from Plantes where id like ' + str(idmob2[j])))
+            self.mob_dispo.append(self.db('Select nom,pwr_lvl,id,spawn_rate from Plantes where id like ' + str(idmob2[j])))
         print(self.mob_dispo)
 
 
@@ -73,11 +74,11 @@ class Wave():
         select = []
         for i in range(len(self.mob_dispo)):
             if self.mob_dispo[i][0][1] == -1:
-                select.append(self.mob_dispo[i][0][0])
+                select.append((self.mob_dispo[i][0][0], self.mob_dispo[i][0][2], self.mob_dispo[i][0][3]))
             elif self.mob_dispo[i][0][1] > 0 <= self.val_pwr:
                 print((self.mob_dispo[i][0][0], testproba(self.mob_dispo[i][0][1], self.val_pwr, self.difficulty))) # sert pour test
                 if randint(0,int((1 + self.mob_dispo[i][0][1]) * 5)) <= int((self.val_pwr / 2) * (1 + ((self.difficulty * 2) / 10))):
-                    select.append(self.mob_dispo[i][0][0])
+                    select.append((self.mob_dispo[i][0][0], self.mob_dispo[i][0][2], self.mob_dispo[i][0][3]))
                     self.diff_lvl += self.mob_dispo[i][0][1]
         # diff_lvl peut servir a voir si la difficulté est trop haute ou trop basse par rapport a la moyenne et alors ajustez la difficulté avec des évenemnts aléatoires, terrains plus compliqué et/ou condition de victoire...
         return select, self.diff_lvl
@@ -95,7 +96,40 @@ class Wave():
             self.chall.append(1) # id : No Chall
         else:
             self.chall.append(0) # id : Chall bonus / aide
-        self.flag = int(2 + ((diff + self.difficulty * 3 - 4) / 10))
+        self.flag = int(2 + ((diff + self.difficulty * 3 - 5) / 12))
+
+
+
+    def file_mob(self):
+        v = ((1 + self.difficulty * 0.2) * (self.flag * 0.8)) * 50
+        val_max = randint(int(v * 0.9), int(v * 1.1))
+        val = 0
+        spawn = [] # spawn potential
+        for i in range(len(self.compo[0])):
+            for j in range(self.compo[0][i][2]):
+                spawn.append(self.compo[0][i][1])
+
+        self.mob_spawn_list.append(spawn[0]) # être sur que les 3 premiers végétaux soit des trucs basiques, puis après roues libres
+        self.mob_spawn_list.append(spawn[0])
+        self.mob_spawn_list.append(spawn[0])
+
+        for drap in range(self.flag):
+            while val < val_max // self.flag: # lorsque l'on summon la wave : si la val est >= 0 alors summon l'unité de cette id, sinon summon avec un délaie de ~6 frame les ||val|| prochaine unités (et affiché le texte de la wave)
+                self.mob_spawn_list.append(spawn[randint(0,len(spawn) - 1)])
+                val = val + 1
+            val = 0
+            vague_nbr = randint(10, 10 + self.difficulty * 3 + int(self.val_pwr * 0.2))
+            self.mob_spawn_list.append(vague_nbr * -1)
+            for h in range(vague_nbr):
+                self.mob_spawn_list.append(spawn[randint(0,len(spawn) - 1)])
+
+
+
+
+
+
+
+
 
 
 
@@ -104,20 +138,12 @@ class Wave():
 
     def create_wave(self):
         self.bestiare_dispo()
-        print(self.mixeur_wave())
+        self.compo = self.mixeur_wave()
         self.challenge()
+        print(self.compo)
         print(self.flag)
-
-
-
-
-
-
-
-
-
-
-
+        self.file_mob()
+        print(self.mob_spawn_list)
 
 
 

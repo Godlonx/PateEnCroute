@@ -2,14 +2,16 @@ import sqlite3
 from xmlrpc.client import FastMarshaller
 
 class Player:
-    def __init__(self):
-        self.stat = {'id':None, 'pseudo': None, 'money':0, 'skillpoint':0, 'niveau':None}
+    def __init__(self, id, pseudo):
+        self.id = id
+        self.psuedo = pseudo
+        self.almanach = [None]
         
-    def get_stat(self, n):
-        return self.stat[n]
+    def 
+
 
     def modif_stat(self, n, val):
-        self.stat[n] = val
+        
         self.interact("UPDATE Players SET (?) = (?) WHERE id_player = (?)", (n, val, self.stat["id_player"]))
     
     def connect(self):

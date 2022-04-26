@@ -165,6 +165,9 @@ class Game:
         self.image = pygame.transform.scale(self.image, (1080, 720))
         screen.blit(self.image, (0,0))
 
+    def connect(self, id):
+        
+
     def gestion_events(self): # Permet de savoir se qu'il se passe sur le jeux, notamment les interaction par click de l'utilisateur
         for event in pygame.event.get():
             
@@ -191,6 +194,8 @@ class Game:
                         else:
                             if pygame.Rect.collidepoint(self.delete1, event.pos):
                                 self.db2('Delete From players where id=1')
+                            elif pygame.Rect.collidepoint(self.continue1, event.pos):
+                                self.connect(1)
                         if self.create2 != None:
                             if pygame.Rect.collidepoint(self.create2, event.pos):
                                 self.DrawRegister(2)

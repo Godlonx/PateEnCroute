@@ -4,6 +4,8 @@ import PlayerMob, start_game
 from inputbox import InputBox
 from plateau import Terrain
 
+##### 720x1080 screen
+
 class Game:
     def __init__(self, screen):
         self.screen = screen
@@ -161,12 +163,12 @@ class Game:
 
         #self.Name = pygame.Rect()
 
-        self.image = pygame.image.load('../Font/Plateau1.png').convert_alpha()
+        self.image = pygame.image.load('../Font/Plateau2.png').convert_alpha()
         self.image = pygame.transform.scale(self.image, (1080, 720))
         screen.blit(self.image, (0,0))
 
     def connect(self, id):
-        
+        pass
 
     def gestion_events(self): # Permet de savoir se qu'il se passe sur le jeux, notamment les interaction par click de l'utilisateur
         for event in pygame.event.get():

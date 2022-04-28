@@ -53,11 +53,11 @@ class Game:
         
         self.bouton_quit = pygame.image.load('../Font/Quit.png')
         self.bouton_quit = pygame.transform.scale(self.bouton_quit, (260, 260))
-        self.bouton_quit_hitbox = pygame.Rect(410, 605, 260, 90)
+        self.bouton_quit_hitbox = pygame.Rect(780, 330, 260, 90)
         
 
 
-        screen.blit(self.bouton_quit, (410, 525))
+        screen.blit(self.bouton_quit, (780, 250))
         screen.blit(self.bouton_start, (40, 250))
     
     def DrawAccount(self):
@@ -153,8 +153,10 @@ class Game:
 
         self.bouton_stats = pygame.Rect(410, 540, 260, 90)
         pygame.draw.rect(self.screen, (250, 150, 50), self.bouton_stats)
-        
-        
+
+        self.bouton_retour = pygame.Rect(20, 20, 50, 50)
+        pygame.draw.rect(self.screen,(255, 0, 50), self.bouton_retour)
+               
         screen.blit(self.bouton_start, (410, 180))
 
     def DrawMap_Monde(self):
@@ -166,9 +168,30 @@ class Game:
         self.image = pygame.image.load('../Font/Plateau2.png').convert_alpha()
         self.image = pygame.transform.scale(self.image, (1080, 720))
         screen.blit(self.image, (0,0))
+        
+        self.bouton_retour = pygame.Rect(20, 20, 50, 50)
+        pygame.draw.rect(self.screen,(255, 0, 50), self.bouton_retour)
+
+        self.co_lvl = [(100, 244), (295, 397), (490, 244), (685, 397), (880, 244)]
+
+        self.inf_lvl = 4
+
+        self.lvl = pygame.Rect(self.co_lvl[self.inf_lvl][0], self.co_lvl[self.inf_lvl][1], 100, 100)
+        pygame.draw.rect(self.screen, (0,255,255), self.lvl)
+
+
+# 100 244
+# 295 397
+# 490 244
+# 685 297
+# 880 244
+
+
 
     def connect(self, id):
-        pass
+        info = self.db("SELECT money, lvl, monde FROM info_p where id = ?", (id,))
+
+
 
     def gestion_events(self): # Permet de savoir se qu'il se passe sur le jeux, notamment les interaction par click de l'utilisateur
         for event in pygame.event.get():
@@ -183,6 +206,7 @@ class Game:
                             self.menu = 'account'
                         if pygame.Rect.collidepoint(self.bouton_quit_hitbox, event.pos):
                             self.running = False
+                        self.display()
 
             elif self.menu == 'account':
                 if event.type == pygame.MOUSEBUTTONUP:
@@ -205,6 +229,9 @@ class Game:
                         else:
                             if pygame.Rect.collidepoint(self.delete2, event.pos):
                                 self.db2('Delete From players where id=2')
+                            if pygame.Rect.collidepoint(self.continue2, event.pos):
+                                self.connect(2)
+                                self.menu = 'party'
                         if self.create3 != None:
                             if pygame.Rect.collidepoint(self.create3, event.pos):
                                 self.DrawRegister(3)
@@ -212,19 +239,23 @@ class Game:
                         else:
                             if pygame.Rect.collidepoint(self.delete3, event.pos):
                                 self.db2('Delete From players where id=3')
+                        self.display()
 
             elif self.menu == 'connect':
                 if event.type == pygame.KEYDOWN or event.type == pygame.MOUSEBUTTONUP:
                     self.input_pseudo.handle_event(event)
                     self.input_pseudo.draw(self.screen)
+                    self.display()
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_RETURN:
                         text = self.input_pseudo.text
                         print(text, isinstance(text, str))
                         id = self.input_pseudo.id
                         self.db("Insert into players(id, pseudo) VALUES(?, ?)", (id, text))
+                        self.db("INSERT into info_p(id, lvl, monde, money) Values(?, ?, ?, ?)", (id, 1,1,0))
                         self.menu = 'party'
-                        
+                        self.display()
+                    
                         #Recup le psuedo, lance la fonction pour enrigstrer et initialiser les donné dans la BDD
                 if event.type == pygame.MOUSEBUTTONUP:
                     if event.button == 1:
@@ -232,29 +263,51 @@ class Game:
                             self.input_pseudo.active = True
                         if pygame.Rect.collidepoint(self.bouton_retour, event.pos):
                             self.menu = 'account'
+                        self.display()
             
             elif self.menu == 'party':
                 if event.type == pygame.MOUSEBUTTONUP:
                     if event.button == 1:
+                        if pygame.Rect.collidepoint(self.bouton_retour, event.pos):
+                            self.menu = 'account'
                         if pygame.Rect.collidepoint(self.bouton_start_hitbox, event.pos):
                             self.menu = 'map_monde'
+                        self.display()
+
+            elif self.menu == 'map_monde':
+                if event.type == pygame.MOUSEBUTTONUP:
+                    if event.button == 1:
+                        if pygame.Rect.collidepoint(self.bouton_retour, event.pos):
+                            self.menu = 'account'
+                        if pygame.Rect.collidepoint(self.lvl, event.pos):
+                            self.menu = 'terrain'
+                        self.display()
+            
+            elif self.menu == 'terrain':
+                if event.type == pygame.MOUSEBUTTONUP:
+                    if event.button == 1:
+                        self.terrain.gevent(event)
+                        self.display()
+
+
 
     def display(self):
             # C'est ce qui permet d'afficher la fenetre
         self.Draw_menu(self.menu)
+        print('A')
         pygame.display.flip()
 
-    def db(self, request, data, type=None):
+    def db(self, request, data):
         sqliteConnection = connect('../Documents/StatsPlayers.db')
         cursor = sqliteConnection.cursor()
-        info = None
         cursor.execute(request, data)
-        if type == "recup":
+        info = None
+        if request[0] == "S":
             info = cursor.fetchall()
-            return info
         sqliteConnection.commit()
         cursor.close()
-    
+        return info
+
     def db2(self, request):
         sqliteConnection = connect('../Documents/StatsPlayers.db')
         cursor = sqliteConnection.cursor()
@@ -263,8 +316,10 @@ class Game:
         cursor.close()
     
     def run(self):
+        self.display()
         while self.running:
-            self.display()
+            if self.menu == 'terrain':
+                print('B')
             self.gestion_events()
             self.clock.tick(60)
 

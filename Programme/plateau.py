@@ -8,6 +8,7 @@ class Terrain:
         self.nb_case_X = 9
         self.nb_case_Y = 5
         self.tab_case = {}
+        self.pates = [[],[],[],[],[],[]]
 
     def draw(self, screen):
         self.fond = pygame.Rect(0, 0, 1080, 720)
@@ -61,3 +62,4 @@ class Terrain:
                         pass
                 if pygame.Rect.collidepoint(self.pause, event.pos):
                     pass
+

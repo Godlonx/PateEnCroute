@@ -23,9 +23,10 @@ class Game:
         elif num == 'party':
             self.DrawParty()        
         elif num == 'map_monde':
-            self.DrawMap_Monde()
             # affiche les niveau dispo dans le monde choisis
-            pass
+            self.DrawMap_Monde()
+        elif num == 'choix_pates':
+            self.DrawPates()
         elif num == 'terrain':
             self.terrain = Terrain()
             self.terrain.draw(self.screen)
@@ -85,8 +86,6 @@ class Game:
         if info != None and (1,) in info:
             self.continue1 = pygame.Rect(120+20, 570, 170, 50)
             pygame.draw.rect(self.screen,(0, 255, 0), self.continue1)
-            self.copy1 = pygame.Rect(120+130, 150, 30, 30)
-            pygame.draw.rect(self.screen,(0, 0, 255), self.copy1)
             self.delete1 = pygame.Rect(120+170, 150, 30, 30)
             pygame.draw.rect(self.screen,(255, 0, 0), self.delete1)
             self.create1 = None
@@ -97,8 +96,6 @@ class Game:
         if info != None and (2,) in info:
             self.continue2 = pygame.Rect(430+20, 570, 170, 50)
             pygame.draw.rect(self.screen,(0, 255, 0), self.continue2)
-            self.copy2 = pygame.Rect(430+130, 150, 30, 30)
-            pygame.draw.rect(self.screen,(0, 0, 255), self.copy2)
             self.delete2 = pygame.Rect(430+170, 150, 30, 30)
             pygame.draw.rect(self.screen,(255, 0, 0), self.delete2)
             self.create2 = None
@@ -109,8 +106,6 @@ class Game:
         if info != None and (3,) in info:
             self.continue3 = pygame.Rect(740+20, 570, 170, 50)
             pygame.draw.rect(self.screen,(0, 255, 0), self.continue3)
-            self.copy3 = pygame.Rect(740+130, 150, 30, 30)
-            pygame.draw.rect(self.screen,(0, 0, 255), self.copy3)
             self.delete3 = pygame.Rect(740+170, 150, 30, 30)
             pygame.draw.rect(self.screen,(255, 0, 0), self.delete3)
             self.create3 = None
@@ -136,6 +131,7 @@ class Game:
             self.input_pseudo.id = 2
         else:
             self.input_pseudo.id = 3
+        ################## Faire le bouton entrer ##################
 
     def DrawParty(self):
         self.fond = pygame.Rect(0, 0, 1080, 720)
@@ -179,19 +175,58 @@ class Game:
         self.lvl = pygame.Rect(self.co_lvl[self.inf_lvl][0], self.co_lvl[self.inf_lvl][1], 100, 100)
         pygame.draw.rect(self.screen, (0,255,255), self.lvl)
 
+    def DrawPates(self):
+        # tab de 6x7
+        self.choix = pygame.Rect(20, 20, 640 , 680)
+        pygame.draw.rect(self.screen, (0, 0, 0), self.choix)
+        self.pates = {}
+        for i in range(6):
+            for j in range(7):
+                # 95 par ? avec 10 d'ecart en x et ? d'ecart en y
+                self.pates[f'pate{i+j}'] = (pygame.Rect(30+i*105, 30+j*80, 95, 70), i+j)
+                pygame.draw.rect(self.screen, (0, 255, 255), self.pates[f'pate{i+j}'][0])
+        print(self.pates)
 
-# 100 244
-# 295 397
-# 490 244
-# 685 297
-# 880 244
-
-
+    def DrawAlmanach(self):
+        self.fond = pygame.Rect(0, 0, 1080, 720)
+        pygame.draw.rect(self.screen, (44, 47, 51), self.fond)
+        
+        self.bouton_retour = pygame.Rect(20, 20, 50, 50)
+        pygame.draw.rect(self.screen,(255, 0, 50), self.bouton_retour)
+        
+        self.PatesMenu = pygame.Rect(120, 20, 400, 50)
+        pygame.draw.rect(self.screen,(35, 39, 42), self.PatesMenu)
+        
+        self.PlantesMenu = pygame.Rect(560, 20, 400, 50)
+        pygame.draw.rect(self.screen,(35, 39, 42), self.PlantesMenu)
+        
+        self.Info = pygame.Rect(100, 100, 880, 400)
+        pygame.draw.rect(self.screen,(35, 39, 42), self.Info)
+        
+        self.Deroulant = pygame.Rect(50, 550, 980, 120)
+        pygame.draw.rect(self.screen, (255, 255, 255), self.Deroulant, 2)
+        
+        self.Gauche = pygame.Rect(70, 570, 40, 80)
+        pygame.draw.rect(self.screen, (0,255,0), self.Gauche)
+        
+        self.almanach = {}
+        self.curseur = 0
+        
+        
+        for i in range(1, 21):
+            # a terminer
+            self.almanach[f'id{i}'] = pygame.Rect(150+i*100,565, 80, 90)
+            
+        self.curseur = 5
+            
+        for j in range(self.curseur, self.curseur+9):
+            pygame.draw.rect(self.screen, (0+10*i, 0+10*i, 0+10*i), self.almanach[f'id{i}'])
+        
+        self.Droite = pygame.Rect(970, 570, 40, 80)
+        pygame.draw.rect(self.screen, (0, 255, 0), self.Droite)
 
     def connect(self, id):
-        info = self.db("SELECT money, lvl, monde FROM info_p where id = ?", (id,))
-
-
+        info = self.db("SELECT money, lvl, monde FROM players where id = ?", (id,))
 
     def gestion_events(self): # Permet de savoir se qu'il se passe sur le jeux, notamment les interaction par click de l'utilisateur
         for event in pygame.event.get():
@@ -222,6 +257,7 @@ class Game:
                                 self.db2('Delete From players where id=1')
                             elif pygame.Rect.collidepoint(self.continue1, event.pos):
                                 self.connect(1)
+                                self.menu = 'party'
                         if self.create2 != None:
                             if pygame.Rect.collidepoint(self.create2, event.pos):
                                 self.DrawRegister(2)
@@ -239,6 +275,9 @@ class Game:
                         else:
                             if pygame.Rect.collidepoint(self.delete3, event.pos):
                                 self.db2('Delete From players where id=3')
+                            if pygame.Rect.collidepoint(self.continue3, event.pos):
+                                self.connect(3)
+                                self.menu = 'party'
                         self.display()
 
             elif self.menu == 'connect':
@@ -251,8 +290,7 @@ class Game:
                         text = self.input_pseudo.text
                         print(text, isinstance(text, str))
                         id = self.input_pseudo.id
-                        self.db("Insert into players(id, pseudo) VALUES(?, ?)", (id, text))
-                        self.db("INSERT into info_p(id, lvl, monde, money) Values(?, ?, ?, ?)", (id, 1,1,0))
+                        self.db("Insert into players(id, pseudo, lvl, monde, money) VALUES(?, ?, ?, ?, ?)", (id, text, 1, 1, 0))
                         self.menu = 'party'
                         self.display()
                     
@@ -280,7 +318,7 @@ class Game:
                         if pygame.Rect.collidepoint(self.bouton_retour, event.pos):
                             self.menu = 'account'
                         if pygame.Rect.collidepoint(self.lvl, event.pos):
-                            self.menu = 'terrain'
+                            self.menu = 'choix_pates'
                         self.display()
             
             elif self.menu == 'terrain':
@@ -288,8 +326,6 @@ class Game:
                     if event.button == 1:
                         self.terrain.gevent(event)
                         self.display()
-
-
 
     def display(self):
             # C'est ce qui permet d'afficher la fenetre

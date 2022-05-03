@@ -11,6 +11,7 @@ class Game:
         self.screen = screen
         self.clock = pygame.time.Clock()
         self.running = True
+        self.drawed_first = True
         self.menu = 'choix_pates'
     
     def Draw_menu(self, num):
@@ -181,20 +182,27 @@ class Game:
         pygame.draw.rect(self.screen, (44, 47, 51), self.fond)
         self.choix = pygame.Rect(20, 20, 640 , 680)
         pygame.draw.rect(self.screen, (0, 0, 0), self.choix)
-        self.pates = {}
-        
-        n = 0
-        for i in range(7):
-            for j in range(6):
-                # 95 par ? avec 10 d'ecart en x et ? d'ecart en y
-                n += 1
-                self.pates[f'pate{n}'] = [pygame.Rect(30+j*105, 130+i*80, 95, 70),n, (0,255,255)]
-                pygame.draw.rect(self.screen, self.pates[f'pate{n}'][2], self.pates[f'pate{n}'][0])
+       
+
+        if self.drawed_first:
+            self.pates_choisis = []
+            self.pates = {}
+            n = 0
+            for i in range(7):
+                for j in range(6):
+                    # 95 par ? avec 10 d'ecart en x et ? d'ecart en y
+                    n += 1
+                    self.pates[f'pate{n}'] = [pygame.Rect(30+j*105, 130+i*80, 95, 70),n, (0,255,255)]
                 
+        for pate in self.pates.keys():
+            pygame.draw.rect(self.screen, self.pates[pate][2], self.pates[pate][0])
+                    
 
         self.z_choisis = pygame.Rect(20, 20, 640, 90)
+
         pygame.draw.rect(self.screen, (44, 44, 0), self.z_choisis, 10)
-        print(self.pates)
+        self.drawed_first = False
+        
 
     def DrawAlmanach(self):
         self.fond = pygame.Rect(0, 0, 1080, 720)
@@ -324,10 +332,16 @@ class Game:
             elif self.menu == 'choix_pates':
                 if event.type == pygame.MOUSEBUTTONUP:
                     if event.button == 1:
-                        for pates in self.pates.keys():
-                            if pygame.Rect.collidepoint(self.pates[pates][0], event.pos):
-                                self.pates[pates][2] = (0, 0, 0)
-                                print(self.pates[pates])
+                        if len(self.pates_choisis) < 6:
+                            for pates in self.pates.keys():
+                                if pygame.Rect.collidepoint(self.pates[pates][0], event.pos):
+                                    self.pates[pates][2] = (153, 170, 181)
+                                    print(self.pates_choisis)
+                                    self.pates_choisis.append(self.pates[pates][1])
+                                    print(self.pates_choisis)
+                                    self.display()
+                                    break
+                                    
             elif self.menu == 'map_monde':
                 if event.type == pygame.MOUSEBUTTONUP:
                     if event.button == 1:

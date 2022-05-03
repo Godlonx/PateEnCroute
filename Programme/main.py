@@ -11,7 +11,7 @@ class Game:
         self.screen = screen
         self.clock = pygame.time.Clock()
         self.running = True
-        self.menu = 'Title'
+        self.menu = 'choix_pates'
     
     def Draw_menu(self, num):
         if num == 'Title':
@@ -142,7 +142,7 @@ class Game:
 
         self.bouton_start = pygame.image.load('../Font/Start.png')
         self.bouton_start = pygame.transform.scale(self.bouton_start, (260, 260))
-        self.bouton_start_hitbox = pygame.Rect(410, 260, 260, 260)
+        self.bouton_start_hitbox = pygame.Rect(410, 260, 260, 90)
         
         self.bouton_option = pygame.Rect(410, 400, 260, 90)
         pygame.draw.rect(self.screen, (50, 150, 50), self.bouton_option)
@@ -177,14 +177,23 @@ class Game:
 
     def DrawPates(self):
         # tab de 6x7
+        self.fond = pygame.Rect(0, 0, 1080, 720)
+        pygame.draw.rect(self.screen, (44, 47, 51), self.fond)
         self.choix = pygame.Rect(20, 20, 640 , 680)
         pygame.draw.rect(self.screen, (0, 0, 0), self.choix)
         self.pates = {}
-        for i in range(6):
-            for j in range(7):
+        
+        n = 0
+        for i in range(7):
+            for j in range(6):
                 # 95 par ? avec 10 d'ecart en x et ? d'ecart en y
-                self.pates[f'pate{i+j}'] = (pygame.Rect(30+i*105, 30+j*80, 95, 70), i+j)
-                pygame.draw.rect(self.screen, (0, 255, 255), self.pates[f'pate{i+j}'][0])
+                n += 1
+                self.pates[f'pate{n}'] = [pygame.Rect(30+j*105, 130+i*80, 95, 70),n, (0,255,255)]
+                pygame.draw.rect(self.screen, self.pates[f'pate{n}'][2], self.pates[f'pate{n}'][0])
+                
+
+        self.z_choisis = pygame.Rect(20, 20, 640, 90)
+        pygame.draw.rect(self.screen, (44, 44, 0), self.z_choisis, 10)
         print(self.pates)
 
     def DrawAlmanach(self):
@@ -312,6 +321,13 @@ class Game:
                             self.menu = 'map_monde'
                         self.display()
 
+            elif self.menu == 'choix_pates':
+                if event.type == pygame.MOUSEBUTTONUP:
+                    if event.button == 1:
+                        for pates in self.pates.keys():
+                            if pygame.Rect.collidepoint(self.pates[pates][0], event.pos):
+                                self.pates[pates][2] = (0, 0, 0)
+                                print(self.pates[pates])
             elif self.menu == 'map_monde':
                 if event.type == pygame.MOUSEBUTTONUP:
                     if event.button == 1:

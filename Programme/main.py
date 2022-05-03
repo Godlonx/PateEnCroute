@@ -196,6 +196,12 @@ class Game:
                 
         for pate in self.pates.keys():
             pygame.draw.rect(self.screen, self.pates[pate][2], self.pates[pate][0])
+        if len(self.pates_choisis) == 6:
+            self.start = pygame.Rect(6 80, 20, 50, 50)
+            pygame.draw.rect(self.screen, (255, 0, 0), self.start)
+        for i in self.pates_choisis:
+            # afficher les pates choisis
+            pass
                     
 
         self.z_choisis = pygame.Rect(20, 20, 640, 90)
@@ -335,6 +341,7 @@ class Game:
                         if len(self.pates_choisis) < 6:
                             for pates in self.pates.keys():
                                 if pygame.Rect.collidepoint(self.pates[pates][0], event.pos):
+                                    
                                     self.pates[pates][2] = (153, 170, 181)
                                     print(self.pates_choisis)
                                     self.pates_choisis.append(self.pates[pates][1])

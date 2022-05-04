@@ -29,7 +29,6 @@ class Game:
         elif num == 'choix_pates':
             self.DrawPates()
         elif num == 'terrain':
-            self.terrain = Terrain()
             self.terrain.draw(self.screen)
         elif num == 'pause':
             self.terrain.draw(self.screen)
@@ -124,7 +123,11 @@ class Game:
         self.bouton_retour = pygame.Rect(620, 230, 50, 50)
         pygame.draw.rect(self.screen,(255, 0, 50), self.bouton_retour)
         
-        self.input_pseudo = InputBox(440, 400, 200, 50) # X, Y, Longeur, Hauteur
+        self.input_pseudo = InputBox(440, 360, 200, 50) # X, Y, Longeur, Hauteur
+        
+        self.entree = pygame.Rect(440, 425, 200, 50)
+        pygame.draw.rect(self.screen,(0, 255, 0), self.entree)
+        
 
         if account == 1:
             self.input_pseudo.id = 1
@@ -197,7 +200,7 @@ class Game:
         for pate in self.pates.keys():
             pygame.draw.rect(self.screen, self.pates[pate][2], self.pates[pate][0])
         if len(self.pates_choisis) == 6:
-            self.start = pygame.Rect(6 80, 20, 50, 50)
+            self.start = pygame.Rect(680, 20, 100, 100)
             pygame.draw.rect(self.screen, (255, 0, 0), self.start)
         for i in self.pates_choisis:
             # afficher les pates choisis
@@ -324,6 +327,8 @@ class Game:
                             self.input_pseudo.active = True
                         if pygame.Rect.collidepoint(self.bouton_retour, event.pos):
                             self.menu = 'account'
+                        if pygame.Rect.collidepoint(self.entree, event.pos) and len(self.input_pseudo.text) > 0:
+                            self.menu = 'party'
                         self.display()
             
             elif self.menu == 'party':
@@ -334,21 +339,7 @@ class Game:
                         if pygame.Rect.collidepoint(self.bouton_start_hitbox, event.pos):
                             self.menu = 'map_monde'
                         self.display()
-
-            elif self.menu == 'choix_pates':
-                if event.type == pygame.MOUSEBUTTONUP:
-                    if event.button == 1:
-                        if len(self.pates_choisis) < 6:
-                            for pates in self.pates.keys():
-                                if pygame.Rect.collidepoint(self.pates[pates][0], event.pos):
-                                    
-                                    self.pates[pates][2] = (153, 170, 181)
-                                    print(self.pates_choisis)
-                                    self.pates_choisis.append(self.pates[pates][1])
-                                    print(self.pates_choisis)
-                                    self.display()
-                                    break
-                                    
+                            
             elif self.menu == 'map_monde':
                 if event.type == pygame.MOUSEBUTTONUP:
                     if event.button == 1:
@@ -358,11 +349,30 @@ class Game:
                             self.menu = 'choix_pates'
                         self.display()
             
+            elif self.menu == 'choix_pates':
+                if event.type == pygame.MOUSEBUTTONUP:
+                    if event.button == 1:
+                        if len(self.pates_choisis) < 6:
+                            for pates in self.pates.keys():
+                                if pygame.Rect.collidepoint(self.pates[pates][0], event.pos):
+                                    if self.pates[pates][1] not in self.pates_choisis:
+                                        self.pates[pates][2] = (153, 170, 181)
+                                        print(self.pates_choisis)
+                                        self.pates_choisis.append(self.pates[pates][1])
+                                        print(self.pates_choisis)
+                                        self.display()
+                                        break
+                        else:
+                            if pygame.Rect.collidepoint(self.start, event.pos):
+                                self.menu = 'terrain'
+                                self.terrain = Terrain(self.pates_choisis)
+                            self.display()
+            
             elif self.menu == 'terrain':
                 if event.type == pygame.MOUSEBUTTONUP:
                     if event.button == 1:
                         self.terrain.gevent(event)
-                        self.display()
+                        
 
     def display(self):
             # C'est ce qui permet d'afficher la fenetre
@@ -392,7 +402,7 @@ class Game:
         self.display()
         while self.running:
             if self.menu == 'terrain':
-                print('B')
+                pass
             self.gestion_events()
             self.clock.tick(60)
 

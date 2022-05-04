@@ -1,14 +1,17 @@
 import pygame
+import sqlite3
 
 
 
 class Terrain:
-    def __init__(self):
+    def __init__(self, pates):
         self.t_case = 100
         self.nb_case_X = 9
         self.nb_case_Y = 5
         self.tab_case = {}
-        self.pates = [[],[],[],[],[],[]]
+        self.info_pates = pates
+        self.using_pates = None
+        print(self.info_pates, 11111)
 
     def draw(self, screen):
         self.fond = pygame.Rect(0, 0, 1080, 720)
@@ -30,23 +33,12 @@ class Terrain:
 
         print(self.tab_case)
 
-        self.pate0 = pygame.Rect(120, 10, 105, 70)
-        pygame.draw.rect(screen, (0,0,130), self.pate0)
+        self.pates = {}
 
-        self.pate1 = pygame.Rect(120+1*105, 10, 105, 70)
-        pygame.draw.rect(screen, (0,0,130+1*20), self.pate1)
+        for i in range(6):
+            self.pates[f'pate{self.info_pates[i]}'] = pate(self.info_pates[i], pygame.Rect(120+i*105, 10, 95, 70))
+            pygame.draw.rect(screen, (0,255,255), self.pates[f'pate{self.info_pates[i]}'].pos)
 
-        self.pate2 = pygame.Rect(120+2*105, 10, 105, 70)
-        pygame.draw.rect(screen, (0,0,130+2*20), self.pate2)
-
-        self.pate3 = pygame.Rect(120+3*105, 10, 105, 70)
-        pygame.draw.rect(screen, (0,0,130+3*20), self.pate3)
-
-        self.pate4 = pygame.Rect(120+4*105, 10, 105, 70)
-        pygame.draw.rect(screen, (0,0,130+4*20), self.pate4)
-
-        self.pate5 = pygame.Rect(120+5*105, 10, 105, 70)
-        pygame.draw.rect(screen, (0,0,130+5*20), self.pate5)
 
 
 
@@ -57,9 +49,33 @@ class Terrain:
     def gevent(self, event):
         if event.type == pygame.MOUSEBUTTONUP:
             if event.button == 1:
-                if pygame.Rect.collidepoint(self.pate1, event.pos):
-                    if self.pate1:
-                        pass
-                if pygame.Rect.collidepoint(self.pause, event.pos):
-                    pass
+                if self.using_pates == None:
+                    for pates in self.pates.keys():
+                        if pygame.Rect.collidepoint(self.pates[pates].pos, event.pos):
+                            if self.pates[pates].usable:
+                                self.using_pates = self.pates[pates].id
+                                print('Pates Utiliser est: ', self.pates[pates].id)
 
+                    if pygame.Rect.collidepoint(self.pause, event.pos):
+                        pass
+                else:
+                    self.using_pates = None
+
+            
+
+class pate:
+    def __init__(self, id, rect) -> None:
+        self.id = id
+        self.pos = rect
+        self.usable = True
+        self.cout = self.get_stat('cout')
+        print(self.id, self.cout)
+
+    def get_stat(self, stat):
+        sqliteConnection = sqlite3.connect('../Documents/StatsPlayers.db')
+        cursor = sqliteConnection.cursor()
+        cursor.execute(f'SELECT (?) from pates where id = {self.id}', (stat,))
+        stati = cursor.fetchall()
+        sqliteConnection.commit()
+        cursor.close()
+        return stati

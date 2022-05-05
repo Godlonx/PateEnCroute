@@ -26,12 +26,13 @@ class Terrain:
         self.wave_inf = pygame.Rect(900, 670, 150, 20) # penser à modifier la taille en fonction du nombre de wave
         pygame.draw.rect(screen, (0, 0, 255), self.wave_inf)
 
+        n = 0
         for i in range(5):
             for j in range(9):
-                self.tab_case[f'case{i}{j}'] = pygame.Rect(150+j*self.t_case, 150+i*self.t_case, self.t_case, self.t_case)
-                pygame.draw.rect(screen, (0+j*4,255-(j+i)*6,0+i*4), self.tab_case[f'case{i}{j}'])
+                n += 1
+                self.tab_case[f'case{n}'] = case(n, pygame.Rect(150+j*self.t_case, 150+i*self.t_case, self.t_case, self.t_case))
+                pygame.draw.rect(screen, (0+j*4,255-(i+j)*6,0+i*4), self.tab_case[f'case{n}'].pos)
 
-        print(self.tab_case)
 
         self.pates = {}
 
@@ -59,10 +60,18 @@ class Terrain:
                     if pygame.Rect.collidepoint(self.pause, event.pos):
                         pass
                 else:
+                    for case in self.tab_case.keys():
+                        if pygame.Rect.collidepoint(self.tab_case[case].pos, event.pos):
+                            if self.tab_case[case].used == None:
+                                self.tab_case[case].used = self.using_pates
+                                print(self.tab_case[case].id, 'a comme paté', self.using_pates)
                     self.using_pates = None
 
-            
-
+class case:
+    def __init__(self, id, rect) -> None:
+        self.id = id
+        self.used = None # L'id du paté present dessus.
+        self.pos = rect
 class pate:
     def __init__(self, id, rect) -> None:
         self.id = id

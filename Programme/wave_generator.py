@@ -40,8 +40,8 @@ class Wave():
     def bestiaire_dispo(self): # récupéré depuis la database tout les mobs du monde: "self.monde"
         idmob = self.db('Select id_mob from Bestiaire where id_monde like ' + str(self.monde))
         for i in range(len(idmob)):
-            self.compo.append(self.db('Select nom, pwr_lvl, id from Plantes where id like ' + str(idmob[i][0])))
-        return self.compo
+            self.mob_dispo.append(self.db('Select nom, pwr_lvl, id, spawn_rate from Plantes where id like ' + str(idmob[i][0])))
+        return self.mob_dispo
 
 
 
@@ -56,18 +56,19 @@ class Wave():
 
 
 
-    def mixeur_wave(self): # self.mob_dispo : tout les mobs présent dans se monde > sert a savoir quelle mob sont séléctionnable pour se lvl. self.difficulty : indice de modificateur de difficulté, où 0 = quasi pacifique, 1 = facile, 2 = normal ect. self.val_pwr : indice de la puissance disponnible pour créer une séléction de mob > sert a donné une valeur de difficulté pour un niveau comme lvl1 = 10, lvl2 = 15 et lvl4 = 20.
+    def selection_mobs(self): # self.mob_dispo : tout les mobs présent dans se monde > sert a savoir quelle mob sont séléctionnable pour se lvl. self.difficulty : indice de modificateur de difficulté, où 0 = quasi pacifique, 1 = facile, 2 = normal ect. self.val_pwr : indice de la puissance disponnible pour créer une séléction de mob > sert a donné une valeur de difficulté pour un niveau comme lvl1 = 10, lvl2 = 15 et lvl4 = 20.
         select = []
         for i in range(len(self.mob_dispo)):
             if self.mob_dispo[i][0][1] == -1:
-                select.append((self.mob_dispo[i][0][0], self.mob_dispo[i][0][2], self.mob_dispo[i][0][3]))
+                select.append(self.mob_dispo[i][0])
             elif self.mob_dispo[i][0][1] > 0 <= self.val_pwr:
                 print((self.mob_dispo[i][0][0], testproba(self.mob_dispo[i][0][1], self.val_pwr, self.difficulty))) # sert pour test
                 if randint(0,int((1 + self.mob_dispo[i][0][1]) * 5)) <= int((self.val_pwr / 2) * (1 + ((self.difficulty * 2) / 10))):
-                    select.append((self.mob_dispo[i][0][0], self.mob_dispo[i][0][2], self.mob_dispo[i][0][3]))
+                    select.append(self.mob_dispo[i][0])
                     self.diff_lvl += self.mob_dispo[i][0][1]
         # diff_lvl peut servir a voir si la difficulté est trop haute ou trop basse par rapport a la moyenne et alors ajustez la difficulté avec des évenemnts aléatoires, terrains plus compliqué et/ou condition de victoire...
-        return select, self.diff_lvl
+        print(select)
+        return select
 
 
     def challenge(self):
@@ -86,15 +87,16 @@ class Wave():
 
 
 
-    def file_mob(self):
+    def file_mobs(self):
         v = ((1 + self.difficulty * 0.2) * (self.flag * 0.8)) * 50
         val_max = randint(int(v * 0.9), int(v * 1.1))
         val = 0
         spawn = [] # spawn potential
-        for i in range(len(self.compo[0])):
-            for j in range(self.compo[0][i][2]):
-                spawn.append(self.compo[0][i][1])
-
+        print(self.compo)
+        for i in range(len(self.compo)):
+            for j in range(self.compo[i][3]):
+                spawn.append(self.compo[i][2])
+        print(spawn)
         self.mob_spawn_list.append(spawn[0]) # être sur que les 3 premiers végétaux soit des trucs basiques, puis après roues libres
         self.mob_spawn_list.append(spawn[0])
         self.mob_spawn_list.append(spawn[0])
@@ -112,12 +114,12 @@ class Wave():
 
 
     def create_wave(self):
-        self.bestiare_dispo()
-        self.compo = self.mixeur_wave()
+        self.bestiaire_dispo()
+        self.compo = self.selection_mobs()
         self.challenge()
         print(self.compo)
         print(self.flag)
-        self.file_mob()
+        self.file_mobs()
         print(self.mob_spawn_list)
 
 

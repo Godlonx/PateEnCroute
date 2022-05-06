@@ -11,6 +11,7 @@ class Game:
         self.screen = screen
         self.clock = pygame.time.Clock()
         self.running = True
+        self.font = pygame.font.Font(None, 40)
         self.drawed_first = True
         self.menu = 'choix_pates'
     
@@ -185,7 +186,7 @@ class Game:
         pygame.draw.rect(self.screen, (44, 47, 51), self.fond)
         self.choix = pygame.Rect(20, 20, 640 , 680)
         pygame.draw.rect(self.screen, (0, 0, 0), self.choix)
-       
+        
 
         if self.drawed_first:
             self.pates_choisis = []
@@ -196,23 +197,30 @@ class Game:
                     # 95 par ? avec 10 d'ecart en x et ? d'ecart en y
                     n += 1
                     self.pates[f'pate{n}'] = [pygame.Rect(30+j*105, 130+i*80, 95, 70),n, (0,255,255)]
+            
                 
         for pate in self.pates.keys():
             pygame.draw.rect(self.screen, self.pates[pate][2], self.pates[pate][0])
+
         if len(self.pates_choisis) == 6:
             self.start = pygame.Rect(720, 600, 250, 80)
             pygame.draw.rect(self.screen, (0, 255, 0), self.start)
             
             
 
-        self.undo =  pygame.Rect(680, 20, 50, 50)
+        self.undo =  pygame.Rect(680, 20, 75, 75)
         pygame.draw.rect(self.screen, (255, 0, 0), self.undo)
+
+        self.retour = pygame.Rect(850, 20, 75, 75)
+        pygame.draw.rect(self.screen, (255, 0, 255), self.retour)
 
         self.z_choisis = pygame.Rect(20, 20, 640, 90)
 
         pygame.draw.rect(self.screen, (0, 0, 0), self.z_choisis)
         self.pates_choix = {}
         
+        self.numtest = self.font.render('1', True, (0, 0, 0))
+
         for i in range(len(self.pates_choisis)):
             self.pates_choix[f'pate{i}'] = pygame.Rect(30 + i*105, 30, 95, 70)
             pygame.draw.rect(self.screen, (0, 255, 255), self.pates_choix[f'pate{i}'])
@@ -359,6 +367,9 @@ class Game:
             elif self.menu == 'choix_pates':
                 if event.type == pygame.MOUSEBUTTONUP:
                     if event.button == 1:
+                        if pygame.Rect.collidepoint(self.retour, event.pos):
+                            self.menu = 'party'
+                            self.display()
                         if len(self.pates_choisis) >= 1:
                             if pygame.Rect.collidepoint(self.undo, event.pos):
                                 pates = self.pates_choisis.pop()

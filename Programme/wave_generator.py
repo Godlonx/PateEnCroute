@@ -41,9 +41,7 @@ class Wave():
         pass # récupéré depuis la database tout les mobs du monde: "self.monde"
         # print(p.db('Select nom,pwr_lvl,id from Plantes'))
         idmob = self.db('Select id_mob from Bestiaire where id_monde like ' + str(self.monde))
-from random import *
-import collections
-from sqlite3 import *
+
 
 
 creer_file_vide = collections.deque
@@ -79,7 +77,6 @@ class Wave():
         self.compo = []
         self.mob_spawn_list = [] # tab a défilé pour savoir quelle mob spawn
 
-
     def bestiare_dispo(self):
         # récupéré depuis la database tout les mobs du monde: "self.monde"
         # print(p.db('Select nom,pwr_lvl,id from Plantes'))
@@ -90,7 +87,6 @@ class Wave():
         self.mob_dispo = stat_mob
         print(self.mob_dispo)
 
-
     def db(self, request):
         sqliteConnection = connect('../Documents/StatsPlayers.db')
         cursor = sqliteConnection.cursor()
@@ -99,10 +95,6 @@ class Wave():
         sqliteConnection.commit()
         cursor.close()
         return info
-
-
-
-
 
     def mixeur_wave(self): # self.mob_dispo : tout les mobs présent dans se monde > sert a savoir quelle mob sont séléctionnable pour se lvl. self.difficulty : indice de modificateur de difficulté, où 0 = quasi pacifique, 1 = facile, 2 = normal ect. self.val_pwr : indice de la puissance disponnible pour créer une séléction de mob > sert a donné une valeur de difficulté pour un niveau comme lvl1 = 10, lvl2 = 15 et lvl4 = 20.
         select = []
@@ -117,7 +109,6 @@ class Wave():
         # diff_lvl peut servir a voir si la difficulté est trop haute ou trop basse par rapport a la moyenne et alors ajustez la difficulté avec des évenemnts aléatoires, terrains plus compliqué et/ou condition de victoire...
         return select, self.diff_lvl
 
-
     def challenge(self):
         diff = self.val_pwr - self.diff_lvl
         if diff >= 12:
@@ -131,8 +122,6 @@ class Wave():
         else:
             self.chall.append(0) # id : Chall bonus / aide
         self.flag = int(2 + ((diff + self.difficulty * 3 - 5) / 12))
-
-
 
     def file_mob(self):
         v = ((1 + self.difficulty * 0.2) * (self.flag * 0.8)) * 50
@@ -157,19 +146,6 @@ class Wave():
             for h in range(vague_nbr):
                 self.mob_spawn_list.append(spawn[randint(0,len(spawn) - 1)])
 
-
-
-
-
-
-
-
-
-
-
-
-
-
     def create_wave(self):
         self.bestiare_dispo()
         self.compo = self.mixeur_wave()
@@ -178,9 +154,6 @@ class Wave():
         print(self.flag)
         self.file_mob()
         print(self.mob_spawn_list)
-
-
-
 
 def testproba(val, pwr, diff): # sert a testé le pourcentage de chance de pop d'un mob dans une compo avec plein de paramètre
     nbr = 0
@@ -278,8 +251,6 @@ def testproba(val, pwr, diff): # sert a testé le pourcentage de chance de pop d
         print(self.flag)
         self.file_mob()
         print(self.mob_spawn_list)
-
-
 
 
 def testproba(val, pwr, diff): # sert a testé le pourcentage de chance de pop d'un mob dans une compo avec plein de paramètre

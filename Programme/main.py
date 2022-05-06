@@ -135,8 +135,7 @@ class Game:
         elif account == 2:
             self.input_pseudo.id = 2
         else:
-            self.input_pseudo.id = 3
-        ################## Faire le bouton entrer ##################
+            self.input_pseudo.id 
 
     def DrawParty(self):
         self.fond = pygame.Rect(0, 0, 1080, 720)
@@ -393,7 +392,6 @@ class Game:
                 if event.type == pygame.MOUSEBUTTONUP:
                     if event.button == 1:
                         self.terrain.gevent(event)
-                        
 
     def display(self):
             # C'est ce qui permet d'afficher la fenetre

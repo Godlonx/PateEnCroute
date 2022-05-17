@@ -1,4 +1,5 @@
 import pygame as pg
+pg.font.init()
 
 
 
@@ -10,6 +11,7 @@ class InputBox:
         self.COLOR_ACTIVE = pg.Color('dodgerblue2')
         self.font = pg.font.Font(None, 32)
         self.rect = pg.Rect(x, y, w, h)
+        self.font=pg.font.Font('../Font/pixelised.ttf',32)
         self.color = self.COLOR_INACTIVE
         self.text = text
         self.id = 0
@@ -21,7 +23,7 @@ class InputBox:
             if self.active:
                 if event.key == pg.K_BACKSPACE:
                     self.text = self.text[:-1]
-                elif event.key == pg.K_RETURN:
+                elif event.key == pg.K_RETURN or event.key == pg.K_ESCAPE or event.key == pg.K_TAB:
                     pass
                 else:
                     self.text += event.unicode

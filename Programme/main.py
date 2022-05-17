@@ -42,15 +42,15 @@ class Game:
         self.fond = pygame.image.load('../Font/pate.png').convert_alpha()
         self.fond = pygame.transform.scale(self.fond, (500, 500))
 
-        self.fond2 = pygame.image.load('../Font/fond.jpg').convert()
+        self.fond2 = pygame.image.load('../Font/fond.png').convert()
         self.fond2 = pygame.transform.scale(self.fond2, (1080, 720))
         
         screen.blit(self.fond2, (0, 0))
         screen.blit(self.fond, (290, 110))
     
     
-        self.Titre = pygame.Rect(270, 50, 520, 150)
-        pygame.draw.rect(self.screen, (0, 0, 255), self.Titre)
+        #self.Titre = pygame.Rect(270, 50, 520, 150)
+        #pygame.draw.rect(self.screen, (0, 0, 255), self.Titre)
 
 
         self.bouton_start = pygame.image.load('../Font/Start.png')
@@ -376,12 +376,12 @@ class Game:
                         self.display()
 
             elif self.menu == 'connect':
-                if event.type == pygame.KEYDOWN or event.type == pygame.MOUSEBUTTONUP:
+                if event.type == pygame.KEYDOWN and len(self.input_pseudo.text) <= 9 or event.type == pygame.MOUSEBUTTONUP and len(self.input_pseudo.text) <= 9:
                     self.input_pseudo.handle_event(event)
                     self.input_pseudo.draw(self.screen)
                     self.display()
                 if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_RETURN:
+                    if event.key == pygame.K_RETURN or event.key == pygame.K_KP_ENTER:
                         text = self.input_pseudo.text
                         print(text, isinstance(text, str))
                         id = self.input_pseudo.id

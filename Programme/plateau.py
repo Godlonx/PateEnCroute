@@ -11,7 +11,7 @@ class Terrain:
         self.tab_case = {}
         self.info_pates = pates
         self.using_pates = None
-        print(self.info_pates, 11111)
+        print(self.info_pates)
 
     def draw(self, screen):
         self.fond = pygame.Rect(0, 0, 1080, 720)
@@ -66,6 +66,9 @@ class Terrain:
                                 self.tab_case[case].used = self.using_pates
                                 print(self.tab_case[case].id, 'a comme paté', self.using_pates)
                     self.using_pates = None
+                if pygame.Rect.collidepoint(self.pause, event.pos):
+                    return 'pause'
+                return None
 
 class case:
     def __init__(self, id, rect) -> None:

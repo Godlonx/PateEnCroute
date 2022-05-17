@@ -5,9 +5,7 @@ class Player:
     def __init__(self, id, pseudo):
         self.id = id
         self.psuedo = pseudo
-        self.almanach = [None]
-        
-    def 
+        self.almanach = [None] 
 
 
     def modif_stat(self, n, val):

@@ -13,7 +13,8 @@ class Game:
         self.running = True
         self.font = pygame.font.Font(None, 40)
         self.drawed_first = True
-        self.menu = 'choix_pates'
+        self.menu = 'Title'
+        
     
     def Draw_menu(self, num):
         if num == 'Title':
@@ -23,7 +24,9 @@ class Game:
         elif num == 'connect':
             self.input_pseudo.draw(self.screen)
         elif num == 'party':
-            self.DrawParty()        
+            self.DrawParty()    
+        elif num == 'almanach':
+            self.DrawAlmanach()
         elif num == 'map_monde':
             # affiche les niveau dispo dans le monde choisis
             self.DrawMap_Monde()
@@ -32,7 +35,8 @@ class Game:
         elif num == 'terrain':
             self.terrain.draw(self.screen)
         elif num == 'pause':
-            self.terrain.draw(self.screen)
+            self.DrawPause()
+
 
     def DrawTitle(self):
         self.fond = pygame.image.load('../Font/pate.png').convert_alpha()
@@ -148,8 +152,8 @@ class Game:
         self.bouton_start = pygame.transform.scale(self.bouton_start, (260, 260))
         self.bouton_start_hitbox = pygame.Rect(410, 260, 260, 90)
         
-        self.bouton_option = pygame.Rect(410, 400, 260, 90)
-        pygame.draw.rect(self.screen, (50, 150, 50), self.bouton_option)
+        self.bouton_almanach = pygame.Rect(410, 400, 260, 90)
+        pygame.draw.rect(self.screen, (50, 150, 50), self.bouton_almanach)
 
         self.bouton_stats = pygame.Rect(410, 540, 260, 90)
         pygame.draw.rect(self.screen, (250, 150, 50), self.bouton_stats)
@@ -227,43 +231,94 @@ class Game:
         self.drawed_first = False
         
     def DrawAlmanach(self):
+        if self.drawed_first:
+            self.curseur = 0
+            self.color_spe = 0
+            self.color_pas = 5
+            self.Part_plantes()
+            self.Part_pates()
+            self.drawed_first = False
+
         self.fond = pygame.Rect(0, 0, 1080, 720)
         pygame.draw.rect(self.screen, (44, 47, 51), self.fond)
-        
-        self.bouton_retour = pygame.Rect(20, 20, 50, 50)
-        pygame.draw.rect(self.screen,(255, 0, 50), self.bouton_retour)
 
-        
+        self.bouton_retour = pygame.image.load('../Font/HUD/button/sprite_leave_red0.png').convert_alpha()
+        self.bouton_retour = pygame.transform.scale(self.bouton_retour, (50, 50))
+        self.bouton_retour_hitbox = pygame.Rect(20, 20, 50, 50)
+
         self.PatesMenu = pygame.Rect(120, 20, 400, 50)
-        pygame.draw.rect(self.screen,(35, 39, 42), self.PatesMenu)
-        
+        pygame.draw.rect(self.screen,(61, 195, 219), self.PatesMenu)
+
         self.PlantesMenu = pygame.Rect(560, 20, 400, 50)
-        pygame.draw.rect(self.screen,(35, 39, 42), self.PlantesMenu)
-        
+        pygame.draw.rect(self.screen,(67, 196, 65), self.PlantesMenu)
+
         self.Info = pygame.Rect(100, 100, 880, 400)
         pygame.draw.rect(self.screen,(35, 39, 42), self.Info)
-        
+
         self.Deroulant = pygame.Rect(50, 550, 980, 120)
         pygame.draw.rect(self.screen, (255, 255, 255), self.Deroulant, 2)
-        
-        self.Gauche = pygame.Rect(70, 570, 40, 80)
-        pygame.draw.rect(self.screen, (0,255,0), self.Gauche)
-        
-        self.almanach = {}
-        self.curseur = 0
-        
-        
+
+        self.gauche = pygame.Rect(70, 570, 40, 80)
+        pygame.draw.rect(self.screen, (0,255,0), self.gauche)
+
+        self.droite = pygame.Rect(970, 570, 40, 80)
+        pygame.draw.rect(self.screen, (0, 255, 0), self.droite)
+
+
+        screen.blit(self.bouton_retour, (20, 20))
+        self.refresh()
+
+
+    def Part_plantes(self):
+        print('OK chgt plante')
+        self.almanach_plantes = {}
         for i in range(1, 21):
-            # a terminer
-            self.almanach[f'id{i}'] = pygame.Rect(150+i*100,565, 80, 90)
-            
-        self.curseur = 5
-            
-        for j in range(self.curseur, self.curseur+9):
-            pygame.draw.rect(self.screen, (0+10*i, 0+10*i, 0+10*i), self.almanach[f'id{i}'])
+            self.almanach_plantes[f'id{i}'] = pygame.Rect(150,565, 80, 90)
+
+
+    def Part_pates(self):
+        print('OK chgt pate')
+        self.almanach_pates = {}
+        for i in range(1, 21):
+            self.almanach_pates[f'id{i}'] = pygame.Rect(150,565, 80, 90)
+
+    def refresh(self, types = None):
+
+        if types == 'plantes':
+            print('plantes', self.color_spe , self.color_pas)
+            for j in range(self.curseur, self.curseur+8):
+
+                self.almanach_plantes[f'id{j}'] = pygame.Rect(150+(j-self.curseur)*100, 565, 80 ,90)
+
+                pygame.draw.rect(self.screen, (self.color_spe + self.color_pas*j, self.color_spe + self.color_pas*j, self.color_spe + self.color_pas*j), self.almanach_plantes[f'id{j}'])
+
+
+            print('refresh des plantes')
+
+        else:
+            print('pate', self.color_spe , self.color_pas)
+            for j in range(self.curseur, self.curseur+8):
+
+                self.almanach_pates[f'id{j}'] = pygame.Rect(150+(j-self.curseur)*100, 565, 80 ,90)
+
+                pygame.draw.rect(self.screen, (self.color_spe + self.color_pas*j, self.color_spe + self.color_pas*j, self.color_spe + self.color_pas*j), self.almanach_pates[f'id{j}'])
+
+            print('refresh des pates')
+        print(self.curseur, "Valeur du curseur")
+
+
+    def DrawPause(self):
+        self.fond = pygame.Rect(290, 210, 500, 300)
+        pygame.draw.rect(self.screen, (0, 0, 0), self.fond)
         
-        self.Droite = pygame.Rect(970, 570, 40, 80)
-        pygame.draw.rect(self.screen, (0, 255, 0), self.Droite)
+        self.fond_contour = pygame.Rect(290, 210, 500, 300)
+        pygame.draw.rect(self.screen, (0, 255, 255), self.fond_contour, 2)
+
+        self.abandon = pygame.Rect(390, 360, 100, 100)
+        pygame.draw.rect(self.screen, (255, 0, 0), self.abandon)
+
+        self.continuer = pygame.Rect(590, 360, 100, 100)
+        pygame.draw.rect(self.screen, (0,255, 0), self.continuer)
 
     def connect(self, id):
         info = self.db("SELECT money, lvl, monde FROM players where id = ?", (id,))
@@ -352,6 +407,8 @@ class Game:
                             self.menu = 'account'
                         if pygame.Rect.collidepoint(self.bouton_start_hitbox, event.pos):
                             self.menu = 'map_monde'
+                        if pygame.Rect.collidepoint(self.bouton_almanach, event.pos):
+                            self.menu = 'almanach'
                         self.display()
                             
             elif self.menu == 'map_monde':
@@ -361,6 +418,7 @@ class Game:
                             self.menu = 'account'
                         if pygame.Rect.collidepoint(self.lvl, event.pos):
                             self.menu = 'choix_pates'
+                        
                         self.display()
             
             elif self.menu == 'choix_pates':
@@ -388,10 +446,43 @@ class Game:
                                 self.terrain = Terrain(self.pates_choisis)
                             self.display()
             
+            elif self.menu == 'almanach':
+                if event.type == pygame.MOUSEBUTTONUP:
+                    if event.button == 1:
+                        if pygame.Rect.collidepoint(self.gauche, event.pos) and self.curseur > 0:
+                            self.curseur -= 1
+                        if pygame.Rect.collidepoint(self.droite, event.pos) and self.curseur < 21:
+                            self.curseur += 1
+                        if pygame.Rect.collidepoint(self.bouton_retour_hitbox, event.pos):
+                            self.menu = 'party'
+                        if pygame.Rect.collidepoint(self.PatesMenu, event.pos):
+                            print(10000000)
+                            self.color_spe = 0
+                            self.color_pas = 5
+                            self.refresh('pates')
+                        if pygame.Rect.collidepoint(self.PlantesMenu, event.pos):
+                            print(20000000)
+                            self.color_spe = 220
+                            self.color_pas = -10
+                            self.refresh('plantes')
+
+                        self.display()
+            
             elif self.menu == 'terrain':
                 if event.type == pygame.MOUSEBUTTONUP:
                     if event.button == 1:
-                        self.terrain.gevent(event)
+                        t = self.terrain.gevent(event)
+                        if t == 'pause':
+                            self.menu = 'pause'
+                        self.display()
+            
+            elif self.menu == 'pause':
+                if event.type == pygame.MOUSEBUTTONUP:
+                    if event.button == 1:
+                        if pygame.Rect.collidepoint(self.continuer, event.pos):
+                            self.menu = 'terrain'
+                        elif pygame.Rect.collidepoint(self.abandon, event.pos):
+                            self.menu = 'party'
 
     def display(self):
             # C'est ce qui permet d'afficher la fenetre
@@ -419,8 +510,11 @@ class Game:
     
     def run(self):
         self.display()
+        p = 0
         while self.running:
             if self.menu == 'terrain':
+                p += 1
+                print(p)
                 pass
             self.gestion_events()
             self.clock.tick(60)

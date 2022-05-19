@@ -1,10 +1,23 @@
 from sqlite3 import *
 import pygame
-import PlayerMob, start_game
 from inputbox import InputBox
 from plateau import Terrain
 
 ##### 720x1080 screen
+
+
+
+
+'''
+
+        self.XXXX = pygame.image.load('../Font/pate.png').convert_alpha()
+        self.XXXX = pygame.transform.scale(self.XXXX, (500, 500))
+        self.XXXX_hitbox = pygame.Rect(40, 330, 260, 90)
+
+        
+        screen.blit(self.XXXX, (0, 0))
+
+'''
 
 class Game:
     def __init__(self, screen):
@@ -39,14 +52,14 @@ class Game:
 
 
     def DrawTitle(self):
-        self.fond = pygame.image.load('../Font/pate.png').convert_alpha()
-        self.fond = pygame.transform.scale(self.fond, (500, 500))
+        self.pate = pygame.image.load('../Font/pate.png').convert_alpha()
+        self.pate = pygame.transform.scale(self.pate, (500, 500))
 
         self.fond2 = pygame.image.load('../Font/fond.png').convert()
         self.fond2 = pygame.transform.scale(self.fond2, (1080, 720))
         
         screen.blit(self.fond2, (0, 0))
-        screen.blit(self.fond, (290, 110))
+        screen.blit(self.pate, (290, 110))
     
     
         #self.Titre = pygame.Rect(270, 50, 520, 150)
@@ -66,33 +79,64 @@ class Game:
         screen.blit(self.bouton_quit, (780, 250))
         screen.blit(self.bouton_start, (40, 250))
     
+    
     def DrawAccount(self):
-        self.fond = pygame.Rect(0, 0, 1080, 720)
-        pygame.draw.rect(self.screen, (44, 47, 51), self.fond)
-
+        self.fond = pygame.image.load('../Font/fond.png').convert()
+        self.fond = pygame.transform.scale(self.fond, (1080, 720))
+        
+        screen.blit(self.fond, (0, 0))
+        
+        
         self.title = pygame.Rect(190, 20 , 1080-380, 70)
         pygame.draw.rect(self.screen, (35, 39, 42) , self.title)
-
-        self.bouton_retour = pygame.Rect(20, 20, 50, 50)
-        pygame.draw.rect(self.screen,(255, 0, 50), self.bouton_retour)
-
-        self.save1 = pygame.Rect(120, 140, 210, 500)
-        pygame.draw.rect(self.screen, (35, 39, 42) , self.save1)
+        
+        
+        self.bouton_retour = pygame.image.load('../Font/HUD/button/sprite_leave_red0.png').convert_alpha()
+        self.bouton_retour = pygame.transform.scale(self.bouton_retour, (50, 50))
+        self.bouton_retour_hitbox = pygame.Rect(20, 20, 50, 50)
+        
+        
         self.save2 = pygame.Rect(430, 140, 210, 500)
         pygame.draw.rect(self.screen, (35, 39, 42) , self.save2)
         self.save3 = pygame.Rect(740, 140, 210, 500)
         pygame.draw.rect(self.screen, (35, 39, 42) , self.save3)
-
+        
+        
+        
+        self.save1 = pygame.image.load('../Font/HUD/party/case choix de parties.png').convert()
+        self.save1 = pygame.transform.scale(self.save1, (210, 500))
+        self.save1_hitbox = pygame.Rect(120, 140, 210, 500)
+        
+        self.save2 = pygame.image.load('../Font/HUD/party/case choix de parties.png').convert_alpha()
+        self.save2 = pygame.transform.scale(self.save2, (210, 500))
+        self.save2_hitbox = pygame.Rect(430, 140, 210, 500)
+        
+        self.save3 = pygame.image.load('../Font/HUD/party/case choix de parties.png').convert_alpha()
+        self.save3 = pygame.transform.scale(self.save3, (210, 500))
+        
+        screen.blit(self.bouton_retour, (20, 20))
+        screen.blit(self.save1, (120, 140))
+        screen.blit(self.save2, (120, 140))
+        screen.blit(self.save3, (120, 140))
+        
+        
         sqliteConnection = connect('../Documents/StatsPlayers.db')
         cursor = sqliteConnection.cursor()
         cursor.execute("SELECT id From players")
         info = cursor.fetchall()
         
+        
+        
         if info != None and (1,) in info:
             self.continue1 = pygame.Rect(120+20, 570, 170, 50)
             pygame.draw.rect(self.screen,(0, 255, 0), self.continue1)
-            self.delete1 = pygame.Rect(120+170, 150, 30, 30)
-            pygame.draw.rect(self.screen,(255, 0, 0), self.delete1)
+            
+            self.delete1 = pygame.image.load('../Font/HUD/poubelle/sprite_poubelle_rouge0.png').convert_alpha()
+            self.delete1 = pygame.transform.scale(self.delete1, (40, 40))
+            self.delete1_hitbox = pygame.Rect(280, 150, 40, 40)
+    
+            screen.blit(self.delete1, (280, 150))
+            
             self.create1 = None
         else:
             self.create1 = pygame.Rect(140, 140+230, 170, 40)
@@ -101,8 +145,13 @@ class Game:
         if info != None and (2,) in info:
             self.continue2 = pygame.Rect(430+20, 570, 170, 50)
             pygame.draw.rect(self.screen,(0, 255, 0), self.continue2)
-            self.delete2 = pygame.Rect(430+170, 150, 30, 30)
-            pygame.draw.rect(self.screen,(255, 0, 0), self.delete2)
+            
+            self.delete2 = pygame.image.load('../Font/HUD/poubelle/sprite_poubelle_rouge0.png').convert_alpha()
+            self.delete2 = pygame.transform.scale(self.delete2, (40, 40))
+            self.delete2_hitbox = pygame.Rect(590, 150, 40, 40)
+    
+            screen.blit(self.delete2, (590, 150))
+            
             self.create2 = None
         else:
             self.create2 = pygame.Rect(450, 140+230, 170, 40)
@@ -111,8 +160,12 @@ class Game:
         if info != None and (3,) in info:
             self.continue3 = pygame.Rect(740+20, 570, 170, 50)
             pygame.draw.rect(self.screen,(0, 255, 0), self.continue3)
-            self.delete3 = pygame.Rect(740+170, 150, 30, 30)
-            pygame.draw.rect(self.screen,(255, 0, 0), self.delete3)
+            self.delete3 = pygame.image.load('../Font/HUD/poubelle/sprite_poubelle_rouge0.png').convert_alpha()
+            self.delete3 = pygame.transform.scale(self.delete3, (40, 40))
+            self.delete3_hitbox = pygame.Rect(900, 150, 40, 40)
+    
+            screen.blit(self.delete3, (900, 150))
+            
             self.create3 = None
         else:
             self.create3 = pygame.Rect(760, 140+230, 170, 40)
@@ -139,7 +192,8 @@ class Game:
         elif account == 2:
             self.input_pseudo.id = 2
         else:
-            self.input_pseudo.id 
+            self.input_pseudo.id = 3
+
 
     def DrawParty(self):
         self.fond = pygame.Rect(0, 0, 1080, 720)
@@ -341,14 +395,14 @@ class Game:
             elif self.menu == 'account':
                 if event.type == pygame.MOUSEBUTTONUP:
                     if event.button == 1:
-                        if pygame.Rect.collidepoint(self.bouton_retour, event.pos):
+                        if pygame.Rect.collidepoint(self.bouton_retour_hitbox, event.pos):
                             self.menu = 'Title'
                         if self.create1 != None:
                             if pygame.Rect.collidepoint(self.create1, event.pos):
                                 self.DrawRegister(1)
                                 self.menu =  'connect'
                         else:
-                            if pygame.Rect.collidepoint(self.delete1, event.pos):
+                            if pygame.Rect.collidepoint(self.delete1_hitbox, event.pos):
                                 self.db2('Delete From players where id=1')
                             elif pygame.Rect.collidepoint(self.continue1, event.pos):
                                 self.connect(1)
@@ -358,7 +412,7 @@ class Game:
                                 self.DrawRegister(2)
                                 self.menu =  'connect'
                         else:
-                            if pygame.Rect.collidepoint(self.delete2, event.pos):
+                            if pygame.Rect.collidepoint(self.delete2_hitbox, event.pos):
                                 self.db2('Delete From players where id=2')
                             if pygame.Rect.collidepoint(self.continue2, event.pos):
                                 self.connect(2)
@@ -368,7 +422,7 @@ class Game:
                                 self.DrawRegister(3)
                                 self.menu =  'connect'
                         else:
-                            if pygame.Rect.collidepoint(self.delete3, event.pos):
+                            if pygame.Rect.collidepoint(self.delete3_hitbox, event.pos):
                                 self.db2('Delete From players where id=3')
                             if pygame.Rect.collidepoint(self.continue3, event.pos):
                                 self.connect(3)
@@ -398,6 +452,10 @@ class Game:
                             self.menu = 'account'
                         if pygame.Rect.collidepoint(self.entree, event.pos) and len(self.input_pseudo.text) > 0:
                             self.menu = 'party'
+                            text = self.input_pseudo.text
+                            print(text, isinstance(text, str))
+                            id = self.input_pseudo.id
+                            self.db("Insert into players(id, pseudo, lvl, monde, money) VALUES(?, ?, ?, ?, ?)", (id, text, 1, 1, 0))
                         self.display()
             
             elif self.menu == 'party':

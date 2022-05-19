@@ -1,6 +1,5 @@
 from sqlite3 import *
 import pygame
-import PlayerMob, start_game
 from inputbox import InputBox
 from plateau import Terrain
 
@@ -13,11 +12,11 @@ class Game:
         self.running = True
         self.font = pygame.font.Font(None, 40)
         self.drawed_first = True
-        self.menu = 'Title'
+        self.menu = 'title'
         
     
     def Draw_menu(self, num):
-        if num == 'Title':
+        if num == 'title':
             self.DrawTitle()
         elif num == 'account': # afficher le menu de choix des parties
             self.DrawAccount()   
@@ -192,7 +191,7 @@ class Game:
         
 
         if self.drawed_first:
-            self.pates_choisis = []
+            self.pates_choisis = [1,2,3,4,5,6]
             self.pates = {}
             n = 0
             for i in range(7):
@@ -268,13 +267,11 @@ class Game:
         screen.blit(self.bouton_retour, (20, 20))
         self.refresh()
 
-
     def Part_plantes(self):
         print('OK chgt plante')
         self.almanach_plantes = {}
         for i in range(1, 21):
             self.almanach_plantes[f'id{i}'] = pygame.Rect(150,565, 80, 90)
-
 
     def Part_pates(self):
         print('OK chgt pate')
@@ -306,7 +303,6 @@ class Game:
             print('refresh des pates')
         print(self.curseur, "Valeur du curseur")
 
-
     def DrawPause(self):
         self.fond = pygame.Rect(290, 210, 500, 300)
         pygame.draw.rect(self.screen, (0, 0, 0), self.fond)
@@ -329,7 +325,7 @@ class Game:
             if event.type == pygame.QUIT:
                 self.running = False
 
-            if self.menu == 'Title':
+            if self.menu == 'title':
                 if event.type == pygame.MOUSEBUTTONUP: # Savoir si on relache un boutton de souris
                     if event.button == 1:
                         if pygame.Rect.collidepoint(self.bouton_start_hitbox, event.pos):
@@ -342,7 +338,7 @@ class Game:
                 if event.type == pygame.MOUSEBUTTONUP:
                     if event.button == 1:
                         if pygame.Rect.collidepoint(self.bouton_retour, event.pos):
-                            self.menu = 'Title'
+                            self.menu = 'title'
                         if self.create1 != None:
                             if pygame.Rect.collidepoint(self.create1, event.pos):
                                 self.DrawRegister(1)
@@ -397,6 +393,10 @@ class Game:
                         if pygame.Rect.collidepoint(self.bouton_retour, event.pos):
                             self.menu = 'account'
                         if pygame.Rect.collidepoint(self.entree, event.pos) and len(self.input_pseudo.text) > 0:
+                            text = self.input_pseudo.text
+                            print(text, isinstance(text, str))
+                            id = self.input_pseudo.id
+                            self.db("Insert into players(id, pseudo, lvl, monde, money) VALUES(?, ?, ?, ?, ?)", (id, text, 1, 1, 0))
                             self.menu = 'party'
                         self.display()
             
@@ -444,6 +444,7 @@ class Game:
                             if pygame.Rect.collidepoint(self.start, event.pos):
                                 self.menu = 'terrain'
                                 self.terrain = Terrain(self.pates_choisis)
+                                self.drawed_first = True
                             self.display()
             
             elif self.menu == 'almanach':
@@ -481,8 +482,12 @@ class Game:
                     if event.button == 1:
                         if pygame.Rect.collidepoint(self.continuer, event.pos):
                             self.menu = 'terrain'
+                            self.display()
                         elif pygame.Rect.collidepoint(self.abandon, event.pos):
                             self.menu = 'party'
+                            self.display()
+                        
+
 
     def display(self):
             # C'est ce qui permet d'afficher la fenetre
@@ -510,12 +515,13 @@ class Game:
     
     def run(self):
         self.display()
-        p = 0
+        p, i = 0, 0
         while self.running:
             if self.menu == 'terrain':
-                p += 1
-                print(p)
-                pass
+                p+= 1
+                if p%15 == 0:
+                    i += 1
+                    self.terrain.update_pate()
             self.gestion_events()
             self.clock.tick(60)
 

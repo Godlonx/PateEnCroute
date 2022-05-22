@@ -92,6 +92,7 @@ class Terrain:
     def update_pate(self):
         print(self.steaks)
         for pate in self.pates.keys():
+            print(self.pates[pate].cout)
             if self.pates[pate].recup > 0:
                 self.pates[pate].recup -= 1
             else:

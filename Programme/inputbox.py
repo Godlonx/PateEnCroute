@@ -25,7 +25,7 @@ class InputBox:
                     self.text = self.text[:-1]
                 elif event.key == pg.K_RETURN or event.key == pg.K_ESCAPE or event.key == pg.K_TAB:
                     pass
-                else:
+                elif len(self.text) <= 9:
                     self.text += event.unicode
                 # Re-render the text.
                 self.txt_surface = self.font.render(self.text, True, self.color)

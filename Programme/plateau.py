@@ -38,10 +38,12 @@ class Terrain:
             for i in range(5):
                 for j in range(9):
                     n += 1
-                    self.tab_case[f'case{n}'] = case(n, pygame.Rect(150+j*self.t_case, 150+i*self.t_case, self.t_case, self.t_case))
+                    self.tab_case[f'case{n}'] = case(n, pygame.Rect(150+j*self.t_case, 150+i*self.t_case, self.t_case, self.t_case), (150+j*self.t_case, 150+i*self.t_case))
                     
             for i in range(6):
-                self.pates[f'pate{self.info_pates[i]}'] = pate_graine(self.info_pates[i], pygame.Rect(120+i*105, 10, 95, 70))
+                pate = pygame.image.load(f'../Font/pates/pate{self.info_pates[1]}/0.png')
+                pate = pygame.transform.scale(pate, (100, 100))
+                self.pates[f'pate{self.info_pates[i]}'] = pate_graine(self.info_pates[i], pygame.Rect(120+i*105, 10, 95, 70), pate)
             self.drawed_first = False
 
 
@@ -65,7 +67,7 @@ class Terrain:
             if event.button == 1:
                 if self.using_pates == None:
                     for pate in self.pates.keys():
-                        if pygame.Rect.collidepoint(self.pates[pate].pos, event.pos):
+                        if pygame.Rect.collidepoint(self.pates[pate].hitbox, event.pos):
                             if self.pates[pate].usable:
                                 if self.pates[pate].cout <= self.steaks:
                                     self.using_pates = self.pates[pate].id
@@ -79,7 +81,7 @@ class Terrain:
                             if self.tab_case[case].used == None:
                                 print(self.tab_case[case].used)
                                 self.tab_case[case].used = self.using_pates
-                                
+                                self.tab_case[case].sprite = self.pates[f'pate{self.using_pate}'].sprite
                                 self.pates[f'pate{self.using_pates}'].recup = self.pates[f'pate{self.using_pates}'].cd
                                 self.pates[f'pate{self.using_pates}'].usable = False
                                 print(self.tab_case[case].id, 'a comme paté', self.using_pates, self.tab_case[case].used)
@@ -89,7 +91,7 @@ class Terrain:
                     return 'pause'
                 return None
 
-    def update_pate(self):
+    def update_pate(self, screen):
         print(self.steaks)
         for pate in self.pates.keys():
             print(self.pates[pate].cout)
@@ -97,20 +99,27 @@ class Terrain:
                 self.pates[pate].recup -= 1
             else:
                 self.pates[pate].usable = True
+
+        for case in self.tab_case.keys():
+            if self.tab_case[case].sprite != None:
+                screen.blit(self.tab_case[case].sprite, self.tab_case[case].co)
         
 
 class case:
-    def __init__(self, id, rect) -> None:
+    def __init__(self, id, rect, co) -> None:
         self.id = id
         self.used = None # L'id du paté present dessus.
         self.pos = rect
+        self.sprite = None
+        self.co = co
 
 
 class pate_graine:
-    def __init__(self, id, rect) -> None:
+    def __init__(self, id, rect, sprite) -> None:
         self.id = id
         self.nom = self.get_stat('nom')
-        self.pos = rect
+        self.hitbox = rect
+        self.sprite = sprite
         self.usable = True
         self.cout = self.get_stat('cout')[0]
         self.cd = self.get_stat('cd')[0]

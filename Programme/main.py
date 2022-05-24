@@ -26,9 +26,8 @@ class Game:
         self.running = True
         self.font = pygame.font.Font(None, 40)
         self.drawed_first = True
-        self.menu = 'title'
+        self.menu = 'party'
         
-    
     def Draw_menu(self, num):
         if num == 'title':
             self.DrawTitle()
@@ -49,7 +48,6 @@ class Game:
             self.terrain.draw(self.screen)
         elif num == 'pause':
             self.DrawPause()
-
 
     def DrawTitle(self):
         self.pate = pygame.image.load('../Font/pate.png').convert_alpha()
@@ -79,7 +77,6 @@ class Game:
         screen.blit(self.bouton_quit, (780, 250))
         screen.blit(self.bouton_start, (40, 250))
     
-    
     def DrawAccount(self):
         self.fond = pygame.image.load('../Font/HUD/fond/fond.png').convert()
         self.fond = pygame.transform.scale(self.fond, (1080, 720))
@@ -96,29 +93,7 @@ class Game:
         self.bouton_retour_hitbox = pygame.Rect(20, 20, 50, 50)
         
         
-        self.save2 = pygame.Rect(430, 140, 210, 500)
-        pygame.draw.rect(self.screen, (35, 39, 42) , self.save2)
-        self.save3 = pygame.Rect(740, 140, 210, 500)
-        pygame.draw.rect(self.screen, (35, 39, 42) , self.save3)
-        
-        
-        
-        self.save1 = pygame.image.load('../Font/HUD/party/case choix de parties.png').convert()
-        self.save1 = pygame.transform.scale(self.save1, (210, 500))
-        self.save1_hitbox = pygame.Rect(120, 140, 210, 500)
-        
-        self.save2 = pygame.image.load('../Font/HUD/party/case choix de parties.png').convert_alpha()
-        self.save2 = pygame.transform.scale(self.save2, (210, 500))
-        self.save2_hitbox = pygame.Rect(430, 140, 210, 500)
-        
-        self.save3 = pygame.image.load('../Font/HUD/party/case choix de parties.png').convert_alpha()
-        self.save3 = pygame.transform.scale(self.save3, (210, 500))
-        
         screen.blit(self.bouton_retour, (20, 20))
-        screen.blit(self.save1, (120, 140))
-        screen.blit(self.save2, (120, 140))
-        screen.blit(self.save3, (120, 140))
-        
         
         sqliteConnection = connect('../Documents/StatsPlayers.db')
         cursor = sqliteConnection.cursor()
@@ -128,6 +103,10 @@ class Game:
         
         
         if info != None and (1,) in info:
+
+            self.save1 = pygame.image.load('../Font/HUD/party/case choix de parties.png').convert_alpha()
+            self.save1 = pygame.transform.scale(self.save1, (210, 450))
+            screen.blit(self.save1, (120, 140))
             self.continue1 = pygame.Rect(120+20, 570, 170, 50)
             pygame.draw.rect(self.screen,(0, 255, 0), self.continue1)
             
@@ -139,10 +118,14 @@ class Game:
             
             self.create1 = None
         else:
-            self.create1 = pygame.Rect(140, 140+230, 170, 40)
-            pygame.draw.rect(self.screen,(0, 0, 0), self.create1)
-
+            self.create1 = pygame.image.load('../Font/HUD/plus/sprite_plus0.png')
+            self.create1_hitbox = pygame.Rect(217, 382, 16, 16)
+            screen.blit(self.create1, (217, 382))
+            
         if info != None and (2,) in info:
+            self.save2 = pygame.image.load('../Font/HUD/party/case choix de parties.png').convert_alpha()
+            self.save2 = pygame.transform.scale(self.save2, (210, 450))
+            screen.blit(self.save2, (430, 140))
             self.continue2 = pygame.Rect(430+20, 570, 170, 50)
             pygame.draw.rect(self.screen,(0, 255, 0), self.continue2)
             
@@ -158,6 +141,9 @@ class Game:
             pygame.draw.rect(self.screen,(0, 0, 0), self.create2)
             
         if info != None and (3,) in info:
+            self.save3 = pygame.image.load('../Font/HUD/party/case choix de parties.png').convert_alpha()
+            self.save3 = pygame.transform.scale(self.save3, (210, 450))
+            screen.blit(self.save3, (740,140))
             self.continue3 = pygame.Rect(740+20, 570, 170, 50)
             pygame.draw.rect(self.screen,(0, 255, 0), self.continue3)
             self.delete3 = pygame.image.load('../Font/HUD/poubelle/sprite_poubelle_rouge0.png').convert_alpha()
@@ -165,6 +151,7 @@ class Game:
             self.delete3_hitbox = pygame.Rect(900, 150, 40, 40)
     
             screen.blit(self.delete3, (900, 150))
+            
             
             self.create3 = None
         else:
@@ -194,7 +181,6 @@ class Game:
         else:
             self.input_pseudo.id = 3
 
-
     def DrawParty(self):
         self.fond = pygame.Rect(0, 0, 1080, 720)
         pygame.draw.rect(self.screen, (44, 47, 51), self.fond)
@@ -202,7 +188,7 @@ class Game:
         self.Titre = pygame.Rect(270, 50, 520, 150)
         pygame.draw.rect(self.screen, (0, 0, 255), self.Titre)
 
-        self.bouton_start = pygame.image.load('../Font/Start.png')
+        self.bouton_start = pygame.image.load('../Font/HUD/start/Start.png')
         self.bouton_start = pygame.transform.scale(self.bouton_start, (260, 260))
         self.bouton_start_hitbox = pygame.Rect(410, 260, 260, 90)
         
@@ -396,7 +382,7 @@ class Game:
                             self.menu = 'title'
                             self.drawed_first = True
                         if self.create1 != None:
-                            if pygame.Rect.collidepoint(self.create1, event.pos):
+                            if pygame.Rect.collidepoint(self.create1_hitbox, event.pos):
                                 self.DrawRegister(1)
                                 self.menu =  'connect'
                                 self.drawed_first = True
@@ -560,7 +546,6 @@ class Game:
                             self.menu = 'party'
                             self.drawed_first = True
                             self.display()
-                        
 
 
     def display(self):
@@ -595,7 +580,7 @@ class Game:
                 p+= 1
                 if p%15 == 0:
                     i += 1
-                    self.terrain.update_pate()
+                    self.terrain.update_pate(self.screen)
             self.gestion_events()
             self.clock.tick(60)
 

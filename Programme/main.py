@@ -105,9 +105,9 @@ class Game:
         if info != None and (1,) in info:
 
             self.save1 = pygame.image.load('../Font/HUD/party/case choix de parties.png').convert_alpha()
-            self.save1 = pygame.transform.scale(self.save1, (210, 450))
+            self.save1 = pygame.transform.scale(self.save1, (210, 500))
             screen.blit(self.save1, (120, 140))
-            self.continue1 = pygame.Rect(120+20, 570, 170, 50)
+            self.continue1 = pygame.Rect(140, 570, 170, 50)
             pygame.draw.rect(self.screen,(0, 255, 0), self.continue1)
             
             self.delete1 = pygame.image.load('../Font/HUD/poubelle/sprite_poubelle_rouge0.png').convert_alpha()
@@ -119,14 +119,15 @@ class Game:
             self.create1 = None
         else:
             self.create1 = pygame.image.load('../Font/HUD/plus/sprite_plus0.png')
-            self.create1_hitbox = pygame.Rect(217, 382, 16, 16)
+            self.create1_fond = pygame.Rect(215, 380, 20, 20)
+            pygame.draw.rect(self.screen, (0, 0, 0), self.create1_fond)
             screen.blit(self.create1, (217, 382))
             
         if info != None and (2,) in info:
             self.save2 = pygame.image.load('../Font/HUD/party/case choix de parties.png').convert_alpha()
-            self.save2 = pygame.transform.scale(self.save2, (210, 450))
+            self.save2 = pygame.transform.scale(self.save2, (210, 500))
             screen.blit(self.save2, (430, 140))
-            self.continue2 = pygame.Rect(430+20, 570, 170, 50)
+            self.continue2 = pygame.Rect(450, 570, 170, 50)
             pygame.draw.rect(self.screen,(0, 255, 0), self.continue2)
             
             self.delete2 = pygame.image.load('../Font/HUD/poubelle/sprite_poubelle_rouge0.png').convert_alpha()
@@ -137,12 +138,14 @@ class Game:
             
             self.create2 = None
         else:
-            self.create2 = pygame.Rect(450, 140+230, 170, 40)
-            pygame.draw.rect(self.screen,(0, 0, 0), self.create2)
+            self.create2 = pygame.image.load('../Font/HUD/plus/sprite_plus0.png')
+            self.create2_fond = pygame.Rect(522, 380, 20, 20)
+            pygame.draw.rect(self.screen, (0, 0, 0), self.create2_fond)
+            screen.blit(self.create2, (524, 382))
             
         if info != None and (3,) in info:
             self.save3 = pygame.image.load('../Font/HUD/party/case choix de parties.png').convert_alpha()
-            self.save3 = pygame.transform.scale(self.save3, (210, 450))
+            self.save3 = pygame.transform.scale(self.save3, (210, 500))
             screen.blit(self.save3, (740,140))
             self.continue3 = pygame.Rect(740+20, 570, 170, 50)
             pygame.draw.rect(self.screen,(0, 255, 0), self.continue3)
@@ -155,8 +158,10 @@ class Game:
             
             self.create3 = None
         else:
-            self.create3 = pygame.Rect(760, 140+230, 170, 40)
-            pygame.draw.rect(self.screen,(0, 0, 0), self.create3)
+            self.create3 = pygame.image.load('../Font/HUD/plus/sprite_plus0.png')
+            self.create3_fond = pygame.Rect(839, 380, 20, 20)
+            pygame.draw.rect(self.screen, (0, 0, 0), self.create3_fond)
+            screen.blit(self.create3, (841, 382))
 
     def DrawRegister(self, account):
         self.fond = pygame.Rect(390, 210, 300, 300)
@@ -382,7 +387,7 @@ class Game:
                             self.menu = 'title'
                             self.drawed_first = True
                         if self.create1 != None:
-                            if pygame.Rect.collidepoint(self.create1_hitbox, event.pos):
+                            if pygame.Rect.collidepoint(self.create1_fond, event.pos):
                                 self.DrawRegister(1)
                                 self.menu =  'connect'
                                 self.drawed_first = True
@@ -394,7 +399,7 @@ class Game:
                                 self.menu = 'party'
                                 self.drawed_first = True
                         if self.create2 != None:
-                            if pygame.Rect.collidepoint(self.create2, event.pos):
+                            if pygame.Rect.collidepoint(self.create2_fond, event.pos):
                                 self.DrawRegister(2)
                                 self.menu =  'connect'
                                 self.drawed_first = True
@@ -406,7 +411,7 @@ class Game:
                                 self.menu = 'party'
                                 self.drawed_first = True
                         if self.create3 != None:
-                            if pygame.Rect.collidepoint(self.create3, event.pos):
+                            if pygame.Rect.collidepoint(self.create3_fond, event.pos):
                                 self.DrawRegister(3)
                                 self.menu =  'connect'
                                 self.drawed_first = True

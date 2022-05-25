@@ -195,7 +195,7 @@ class Game:
 
         self.bouton_start = pygame.image.load('../Font/HUD/start/Start.png')
         self.bouton_start = pygame.transform.scale(self.bouton_start, (260, 260))
-        self.bouton_start_hitbox = pygame.Rect(410, 260, 260, 90)
+        self.bouton_start_hitbox = pygame.Rect(423, 247, 234, 128)
         
         self.bouton_almanach = pygame.Rect(410, 400, 260, 90)
         pygame.draw.rect(self.screen, (50, 150, 50), self.bouton_almanach)
@@ -214,7 +214,7 @@ class Game:
 
         #self.Name = pygame.Rect()
 
-        self.image = pygame.image.load('../Font/Plateau2.png').convert_alpha()
+        self.image = pygame.image.load('../Font/HUD/monde_0.png').convert_alpha()
         self.image = pygame.transform.scale(self.image, (1080, 720))
         screen.blit(self.image, (0,0))
         

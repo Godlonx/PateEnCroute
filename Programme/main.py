@@ -26,7 +26,7 @@ class Game:
         self.running = True
         self.font = pygame.font.Font(None, 40)
         self.drawed_first = True
-        self.menu = 'party'
+        self.menu = 'choix_pates'
         
     def Draw_menu(self, num):
         if num == 'title':
@@ -552,7 +552,6 @@ class Game:
                             self.drawed_first = True
                             self.display()
 
-
     def display(self):
             # C'est ce qui permet d'afficher la fenetre
         self.Draw_menu(self.menu)
@@ -579,12 +578,11 @@ class Game:
     
     def run(self):
         self.display()
-        p, i = 0, 0
+        p = 0
         while self.running:
             if self.menu == 'terrain':
                 p+= 1
-                if p%15 == 0:
-                    i += 1
+                if p%10 == 0:
                     self.terrain.update_pate(self.screen)
             self.gestion_events()
             self.clock.tick(60)

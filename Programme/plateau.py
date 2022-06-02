@@ -16,13 +16,6 @@ class Terrain:
         print(self.info_pates)
 
     def draw(self, screen):
-       
-
-       
-        
-        self.terrain = pygame.image.load('../Font/Terrain/damier.png')
-        
-
         if self.drawed_first == True:
             self.fond = pygame.Rect(0, 0, 1080, 720)
             pygame.draw.rect(screen, (44, 47, 51), self.fond)
@@ -34,11 +27,12 @@ class Terrain:
                     self.tab_case[f'case{n}'] = case(n, pygame.Rect(150+j*self.t_case, 150+i*self.t_case, self.t_case, self.t_case), (150+j*self.t_case, 150+i*self.t_case))
                     
             for i in range(6):
-                pate = pygame.image.load(f'../Font/pates/pate{self.info_pates[i]}/0.png')
-                pate = pygame.transform.scale(pate, (100, 100))
-                self.pates[f'pate{self.info_pates[i]}'] = pate_graine(self.info_pates[i], pygame.Rect(120+i*105, 10, 95, 70), pate)
-            
+                lien = f'../Font/pates/pate{self.info_pates[i]}/0.png'
+                #pate = pygame.transform.scale(pate, (100, 100))
+                self.pates[f'pate{self.info_pates[i]}'] = pate_graine(self.info_pates[i], pygame.Rect(120+i*105, 10, 95, 70), lien)
+            self.terrain = pygame.image.load('../Font/Terrain/damier.png')
             screen.blit(self.terrain, (150,150))
+          
             self.drawed_first = False
 
 
@@ -61,12 +55,15 @@ class Terrain:
 
         for i in range(6):
             pygame.draw.rect(screen, (0,255,255), self.pates[f'pate{self.info_pates[i]}'].hitbox)
+        
+        self.update_pate(screen)
 
 
     def Pause(self, screen):
         self.bouton_retour = pygame.Rect(465, 335, 50, 50)
         pygame.draw.rect(screen,(255, 0, 50), self.bouton_retour)
 
+    
     def gevent(self, event):
         if event.type == pygame.MOUSEBUTTONUP:
             if event.button == 1:
@@ -77,7 +74,6 @@ class Terrain:
                                 if self.pates[pate].cout <= self.steaks:
                                     self.using_pates = self.pates[pate].id
                                     print('Pates Utiliser est: ', self.pates[pate].nom)
-                                    self.steaks -= self.pates[pate].cout
                     if pygame.Rect.collidepoint(self.pause, event.pos):
                         pass
                 else:
@@ -86,18 +82,23 @@ class Terrain:
                             if self.tab_case[case].used == None:
                                 print(self.tab_case[case].used)
                                 self.tab_case[case].used = self.using_pates
-                                self.tab_case[case].sprite = self.pates[f'pate{self.using_pates}'].sprite
+                                self.tab_case[case].lien = self.pates[f'pate{self.using_pates}'].lien
                                 self.pates[f'pate{self.using_pates}'].recup = self.pates[f'pate{self.using_pates}'].cd
                                 self.pates[f'pate{self.using_pates}'].usable = False
+                                self.steaks -= self.pates[f'pate{self.using_pates}'].cout
                                 print(self.tab_case[case].id, 'a comme paté', self.using_pates, self.tab_case[case].used)
                     self.using_pates = None
                                 
                 if pygame.Rect.collidepoint(self.pause, event.pos):
+                    self.drawed_first = True
                     return 'pause'
                 return None
 
     def update_pate(self, screen):
         print(self.steaks)
+        self.terrain = pygame.image.load('../Font/Terrain/damier.png')
+        screen.blit(self.terrain, (150,150))
+          
         for pate in self.pates.keys():
             if self.pates[pate].recup > 0:
                 self.pates[pate].recup -= 1
@@ -105,26 +106,36 @@ class Terrain:
                 self.pates[pate].usable = True
 
         for case in self.tab_case.keys():
-            if self.tab_case[case].sprite != None:
-                screen.blit(self.tab_case[case].sprite, self.tab_case[case].co)
+            if self.tab_case[case].lien != None:
+                screen.blit(pygame.image.load(self.tab_case[case].lien), (self.tab_case[case].co[0]+10, self.tab_case[case].co[1]+10))
+                print(self.tab_case[case].lien)
+                self.tab_case[case].lien = self.anim_pate(self.tab_case[case].lien)
         pygame.display.flip()
         
+    def anim_pate(self, lien):
+        tab = lien.split('/')
+        tab[4] = str((int(tab[4][0])+1)%10)+'.png'
+        lien = ''
+        for i in tab:
+            lien += i+'/'
+        lien = lien[:len(lien)-1]
+        return lien
 
 class case:
     def __init__(self, id, rect, co) -> None:
         self.id = id
         self.used = None # L'id du paté present dessus.
         self.pos = rect
-        self.sprite = None
+        self.lien = None
         self.co = co
 
 
 class pate_graine:
-    def __init__(self, id, rect, sprite) -> None:
+    def __init__(self, id, rect, lien) -> None:
         self.id = id
         self.nom = self.get_stat('nom')
         self.hitbox = rect
-        self.sprite = sprite
+        self.lien = lien
         self.usable = True
         self.cout = self.get_stat('cout')[0]
         self.cd = self.get_stat('cd')[0]

@@ -24,7 +24,7 @@ class Game:
         self.running = True
         self.font = pygame.font.Font(None, 40)
         self.drawed_first = True
-        self.menu = 'choix_pates'
+        self.menu = 'title'
         
     def Draw_menu(self, num):
         if num == 'title':
@@ -48,16 +48,20 @@ class Game:
             self.DrawPause()
 
     def DrawTitle(self):
-        self.pate = pygame.image.load('../Font/pate.png').convert_alpha()
-        self.pate = pygame.transform.scale(self.pate, (500, 500))
-
+        if self.drawed_first:
+            self.lien = '../Font/HUD/titre/sprite_0.png'
+            self.drawed_first = False
+        self.pate = pygame.image.load(self.lien).convert_alpha()
+        self.pate = pygame.transform.scale(self.pate, (600, 450))
+        
         self.fond2 = pygame.image.load('../Font/HUD/fond/Fond.png').convert()
         self.fond2 = pygame.transform.scale(self.fond2, (1080, 720))
         
         screen.blit(self.fond2, (0, 0))
+
         screen.blit(self.pate, (290, 110))
     
-    
+
         #self.Titre = pygame.Rect(270, 50, 520, 150)
         #pygame.draw.rect(self.screen, (0, 0, 255), self.Titre)
 
@@ -583,7 +587,6 @@ class Game:
     def display(self):
             # C'est ce qui permet d'afficher la fenetre
         self.Draw_menu(self.menu)
-        print('A')
         pygame.display.flip()
 
     def db(self, request, data):
@@ -604,10 +607,27 @@ class Game:
         sqliteConnection.commit()
         cursor.close()
     
+    def anim(self, lien):
+        tab = lien.split('/')
+        temp = tab[4].split('_')
+        temp2 = temp[1].split('.')
+        tab[4] = temp[0]+ '_'+str((int(temp2[0])+1)%50)+'.png'
+        lien = ''
+        for i in tab:
+            lien += i+'/'
+        lien = lien[:len(lien)-1]
+        return lien
+    
     def run(self):
         self.display()
-        p = 0
+        p, n = 0, 0
+        
         while self.running:
+            if self.menu == 'title':
+                n += 1
+                if n%7 == 0:
+                    self.lien = self.anim(self.lien)
+                    self.display()
             if self.menu == 'terrain':
                 p+= 1
                 if p%10 == 0:

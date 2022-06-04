@@ -19,6 +19,7 @@ from plateau import Terrain
 
 class Game:
     def __init__(self, screen):
+        pygame.font.init()
         self.screen = screen
         self.clock = pygame.time.Clock()
         self.running = True
@@ -73,6 +74,9 @@ class Game:
         
     
     def DrawAccount(self):
+
+        self.font_text = pygame.font.SysFont('../Font/pixelised.ttf', 30)
+
         self.fond = pygame.image.load('../Font/HUD/fond/fond n&b.png').convert()
         self.fond = pygame.transform.scale(self.fond, (1080, 720))
         
@@ -105,18 +109,21 @@ class Game:
             screen.blit(self.save1, (120, 140))
             
             ## sprite_continue0.png
+
             
             self.continue1 = pygame.image.load('../Font/HUD/button/sprite_continue0.png').convert_alpha()
-            self.continue1 = pygame.transform.scale(self.continue1, (190/1.5, 90/1.5))
-            self.continue1_hitbox = pygame.Rect(160, 570, 190/1.5, 90/1.5)
+            self.continue1 = pygame.transform.scale(self.continue1, (130, 60))
+            self.continue1_hitbox = pygame.Rect(160, 570, 130, 60)
             screen.blit(self.continue1, (160, 570))
-            
             
             self.delete1 = pygame.image.load('../Font/HUD/poubelle/sprite_poubelle_rouge0.png').convert_alpha()
             self.delete1 = pygame.transform.scale(self.delete1, (40, 40))
             self.delete1_hitbox = pygame.Rect(280, 150, 40, 40)
-    
             screen.blit(self.delete1, (280, 150))
+
+            self.text_1 = self.font_text.render('AQUAMANCIE', False, (255,255,255))
+            screen.blit(self.text_1, (150, 382))
+
             
             self.create1 = None
         else:
@@ -133,8 +140,8 @@ class Game:
             ##
             
             self.continue2 = pygame.image.load('../Font/HUD/button/sprite_continue0.png').convert_alpha()
-            self.continue2 = pygame.transform.scale(self.continue2, (190/1.5, 90/1.5))
-            self.continue2_hitbox = pygame.Rect(470, 570, 190/1.5, 90/1.5)
+            self.continue2 = pygame.transform.scale(self.continue2, (130, 60))
+            self.continue2_hitbox = pygame.Rect(470, 570, 130, 60)
             screen.blit(self.continue1, (470, 570))
             
             
@@ -159,8 +166,8 @@ class Game:
             ##
             
             self.continue3 = pygame.image.load('../Font/HUD/button/sprite_continue0.png').convert_alpha()
-            self.continue3 = pygame.transform.scale(self.continue3, (190/1.5, 90/1.5))
-            self.continue3_hitbox = pygame.Rect(780, 570, 190/1.5, 90/1.5)
+            self.continue3 = pygame.transform.scale(self.continue3, (130, 60))
+            self.continue3_hitbox = pygame.Rect(780, 570, 130, 60)
             screen.blit(self.continue1, (780, 570))
             
             
@@ -187,11 +194,11 @@ class Game:
     
         
         self.bouton_retour = pygame.image.load('../Font/HUD/button/sprite_button_x_red0.png')
-        self.bouton_retour = pygame.transform.scale(self.bouton_retour, (50, 50))
-        self.bouton_retour_hitbox = pygame.Rect(620, 230, 50, 50)
+        self.bouton_retour = pygame.transform.scale(self.bouton_retour, (40,40))
+        self.bouton_retour_hitbox = pygame.Rect(635, 230, 40,40)
 
         
-        screen.blit(self.bouton_retour, (620, 230))
+        screen.blit(self.bouton_retour, (635, 230))
 
         
         self.input_pseudo = InputBox(440, 360, 200, 50) # X, Y, Longeur, Hauteur
@@ -226,12 +233,17 @@ class Game:
         self.bouton_almanach = pygame.Rect(410, 400, 260, 90)
         pygame.draw.rect(self.screen, (50, 150, 50), self.bouton_almanach)
 
+        '''
+        A voir
         self.bouton_stats = pygame.Rect(410, 540, 260, 90)
         pygame.draw.rect(self.screen, (250, 150, 50), self.bouton_stats)
+        '''
 
-        self.bouton_retour = pygame.Rect(20, 20, 50, 50)
-        pygame.draw.rect(self.screen,(255, 0, 50), self.bouton_retour)
-               
+        self.bouton_retour = pygame.transform.scale(self.bouton_retour, (40, 40))
+        self.bouton_retour_hitbox = pygame.Rect(20, 20, 40, 40)
+        
+        
+        screen.blit(self.bouton_retour, (20, 20))
         screen.blit(self.bouton_start, (410, 180))
 
     def DrawMap_Monde(self):
@@ -244,8 +256,11 @@ class Game:
         self.image = pygame.transform.scale(self.image, (1080, 720))
         screen.blit(self.image, (0,0))
         
-        self.bouton_retour = pygame.Rect(20, 20, 50, 50)
-        pygame.draw.rect(self.screen,(255, 0, 50), self.bouton_retour)
+        self.bouton_retour = pygame.transform.scale(self.bouton_retour, (40, 40))
+        self.bouton_retour_hitbox = pygame.Rect(20, 20, 40, 40)
+        
+        
+        screen.blit(self.bouton_retour, (20, 20))
 
         self.co_lvl = [(100, 244), (295, 397), (490, 244), (685, 397), (880, 244)]
 
@@ -484,7 +499,7 @@ class Game:
             elif self.menu == 'party':
                 if event.type == pygame.MOUSEBUTTONUP:
                     if event.button == 1:
-                        if pygame.Rect.collidepoint(self.bouton_retour, event.pos):
+                        if pygame.Rect.collidepoint(self.bouton_retour_hitbox, event.pos):
                             self.menu = 'account'
                             self.drawed_first = True
                         if pygame.Rect.collidepoint(self.bouton_start_hitbox, event.pos):
@@ -498,7 +513,7 @@ class Game:
             elif self.menu == 'map_monde':
                 if event.type == pygame.MOUSEBUTTONUP:
                     if event.button == 1:
-                        if pygame.Rect.collidepoint(self.bouton_retour, event.pos):
+                        if pygame.Rect.collidepoint(self.bouton_retour_hitbox, event.pos):
                             self.menu = 'account'
                             self.drawed_first = True
                         if pygame.Rect.collidepoint(self.lvl, event.pos):

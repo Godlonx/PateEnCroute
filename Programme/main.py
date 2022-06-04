@@ -58,26 +58,19 @@ class Game:
         self.fond2 = pygame.transform.scale(self.fond2, (1080, 720))
         
         screen.blit(self.fond2, (0, 0))
-
-        screen.blit(self.pate, (290, 110))
-    
-
-        #self.Titre = pygame.Rect(270, 50, 520, 150)
-        #pygame.draw.rect(self.screen, (0, 0, 255), self.Titre)
-
+        screen.blit(self.pate, (245, 110))
 
         self.bouton_start = pygame.image.load('../Font/HUD/start/Start.png')
         self.bouton_start = pygame.transform.scale(self.bouton_start, (260, 260))
-        self.bouton_start_hitbox = pygame.Rect(40, 330, 260, 90)
+        self.bouton_start_hitbox = pygame.Rect(53, 317, 235, 128)
         
         self.bouton_quit = pygame.image.load('../Font/HUD/quit/Quit.png')
         self.bouton_quit = pygame.transform.scale(self.bouton_quit, (260, 260))
-        self.bouton_quit_hitbox = pygame.Rect(780, 330, 260, 90)
-        
+        self.bouton_quit_hitbox = pygame.Rect(793, 317, 234, 128)
 
-
-        screen.blit(self.bouton_quit, (780, 250))
         screen.blit(self.bouton_start, (40, 250))
+        screen.blit(self.bouton_quit, (780, 250))
+        
     
     def DrawAccount(self):
         self.fond = pygame.image.load('../Font/HUD/fond/Fond.png').convert()

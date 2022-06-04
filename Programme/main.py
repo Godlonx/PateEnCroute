@@ -80,19 +80,20 @@ class Game:
         screen.blit(self.bouton_start, (40, 250))
     
     def DrawAccount(self):
-        self.fond = pygame.image.load('../Font/HUD/fond/Fond.png').convert()
+        self.fond = pygame.image.load('../Font/HUD/fond/fond n&b.png').convert()
         self.fond = pygame.transform.scale(self.fond, (1080, 720))
         
         screen.blit(self.fond, (0, 0))
         
+        self.title = pygame.image.load('../Font/HUD/party/partitre.png').convert_alpha()
+        self.title = pygame.transform.scale(self.title, (700, 70))
+        screen.blit(self.title, (190, 20))
         
-        self.title = pygame.Rect(190, 20 , 1080-380, 70)
-        pygame.draw.rect(self.screen, (35, 39, 42) , self.title)
-        
+
         
         self.bouton_retour = pygame.image.load('../Font/HUD/button/sprite_leave_red0.png').convert_alpha()
-        self.bouton_retour = pygame.transform.scale(self.bouton_retour, (50, 50))
-        self.bouton_retour_hitbox = pygame.Rect(20, 20, 50, 50)
+        self.bouton_retour = pygame.transform.scale(self.bouton_retour, (40, 40))
+        self.bouton_retour_hitbox = pygame.Rect(20, 20, 40, 40)
         
         
         screen.blit(self.bouton_retour, (20, 20))
@@ -113,9 +114,9 @@ class Game:
             ## sprite_continue0.png
             
             self.continue1 = pygame.image.load('../Font/HUD/button/sprite_continue0.png').convert_alpha()
-            self.continue1 = pygame.transform.scale(self.continue1, (170, 50))
-            self.continue1_hitbox = pygame.Rect(140, 570, 170, 50)
-            screen.blit(self.continue1, (140, 570))
+            self.continue1 = pygame.transform.scale(self.continue1, (190/1.5, 90/1.5))
+            self.continue1_hitbox = pygame.Rect(160, 570, 190/1.5, 90/1.5)
+            screen.blit(self.continue1, (160, 570))
             
             
             self.delete1 = pygame.image.load('../Font/HUD/poubelle/sprite_poubelle_rouge0.png').convert_alpha()
@@ -139,9 +140,9 @@ class Game:
             ##
             
             self.continue2 = pygame.image.load('../Font/HUD/button/sprite_continue0.png').convert_alpha()
-            self.continue2 = pygame.transform.scale(self.continue2, (170, 50))
-            self.continue2_hitbox = pygame.Rect(450, 570, 170, 50)
-            screen.blit(self.continue1, (450, 570))
+            self.continue2 = pygame.transform.scale(self.continue2, (190/1.5, 90/1.5))
+            self.continue2_hitbox = pygame.Rect(470, 570, 190/1.5, 90/1.5)
+            screen.blit(self.continue1, (470, 570))
             
             
             self.delete2 = pygame.image.load('../Font/HUD/poubelle/sprite_poubelle_rouge0.png').convert_alpha()
@@ -165,9 +166,9 @@ class Game:
             ##
             
             self.continue3 = pygame.image.load('../Font/HUD/button/sprite_continue0.png').convert_alpha()
-            self.continue3 = pygame.transform.scale(self.continue3, (170, 50))
-            self.continue3_hitbox = pygame.Rect(760, 570, 170, 50)
-            screen.blit(self.continue1, (760, 570))
+            self.continue3 = pygame.transform.scale(self.continue3, (190/1.5, 90/1.5))
+            self.continue3_hitbox = pygame.Rect(780, 570, 190/1.5, 90/1.5)
+            screen.blit(self.continue1, (780, 570))
             
             
             self.delete3 = pygame.image.load('../Font/HUD/poubelle/sprite_poubelle_rouge0.png').convert_alpha()

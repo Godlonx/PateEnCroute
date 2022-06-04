@@ -109,8 +109,8 @@ class Game:
             self.save1 = pygame.transform.scale(self.save1, (210, 500))
             screen.blit(self.save1, (120, 140))
             self.pdp1 = pygame.image.load('../Font/HUD/party/pdp.png').convert_alpha()
-            self.pdp1 = pygame.transform.scale(self.pdp1, (72*1.5, 66*1.5))
-            screen.blit(self.pdp1, (165, 250))
+            self.pdp1 = pygame.transform.scale(self.pdp1, (108, 99))
+            screen.blit(self.pdp1, (170, 250))
             
             ## sprite_continue0.png
 
@@ -144,8 +144,8 @@ class Game:
             self.save2 = pygame.transform.scale(self.save2, (210, 500))
             screen.blit(self.save2, (430, 140))
             self.pdp2 = pygame.image.load('../Font/HUD/party/pdp.png').convert_alpha()
-            self.pdp2 = pygame.transform.scale(self.pdp2, (72*1.5, 66*1.5))
-            screen.blit(self.pdp2, (475, 250))
+            self.pdp2 = pygame.transform.scale(self.pdp2, (108, 99))
+            screen.blit(self.pdp2, (480, 250))
             
             ##
             
@@ -177,9 +177,9 @@ class Game:
             self.save3 = pygame.image.load('../Font/HUD/party/case choix de parties.png').convert_alpha()
             self.save3 = pygame.transform.scale(self.save3, (210, 500))
             screen.blit(self.save3, (740,140))
-            self.pdp1 = pygame.image.load('../Font/HUD/party/pdp.png').convert_alpha()
-            self.pdp1 = pygame.transform.scale(self.pdp1, (72*1.5, 66*1.5))
-            screen.blit(self.pdp1, (785, 250))
+            self.pdp3 = pygame.image.load('../Font/HUD/party/pdp.png').convert_alpha()
+            self.pdp3 = pygame.transform.scale(self.pdp3, (108, 99))
+            screen.blit(self.pdp3, (790, 250))
             
             ##
             

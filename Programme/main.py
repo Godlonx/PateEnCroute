@@ -87,6 +87,10 @@ class Game:
         self.title = pygame.transform.scale(self.title, (700, 70))
         screen.blit(self.title, (190, 20))
         
+        self.toptext = pygame.font.Font('../Font/pixelised.ttf', 75)
+        self.savetitle = self.toptext.render("Choose your save", True, (255,255,255))
+        self.textw1 = self.toptext.render("World One", True, (119,80,29))
+        screen.blit(self.savetitle, (200, 15))
 
         
         self.bouton_retour = pygame.image.load('../Font/HUD/button/sprite_leave_red0.png').convert_alpha()
@@ -152,7 +156,7 @@ class Game:
             self.continue2 = pygame.image.load('../Font/HUD/button/sprite_continue0.png').convert_alpha()
             self.continue2 = pygame.transform.scale(self.continue2, (130, 60))
             self.continue2_hitbox = pygame.Rect(470, 570, 130, 60)
-            screen.blit(self.continue1, (470, 570))
+            screen.blit(self.continue2, (470, 570))
             
             
             self.delete2 = pygame.image.load('../Font/HUD/poubelle/sprite_poubelle_rouge0.png').convert_alpha()
@@ -186,7 +190,7 @@ class Game:
             self.continue3 = pygame.image.load('../Font/HUD/button/sprite_continue0.png').convert_alpha()
             self.continue3 = pygame.transform.scale(self.continue3, (130, 60))
             self.continue3_hitbox = pygame.Rect(780, 570, 130, 60)
-            screen.blit(self.continue1, (780, 570))
+            screen.blit(self.continue3, (780, 570))
             
             
             self.delete3 = pygame.image.load('../Font/HUD/poubelle/sprite_poubelle_rouge0.png').convert_alpha()
@@ -242,18 +246,22 @@ class Game:
             self.input_pseudo.id = 3
 
     def DrawParty(self):
-        self.fond = pygame.Rect(0, 0, 1080, 720)
-        pygame.draw.rect(self.screen, (44, 47, 51), self.fond)
-
-        self.Titre = pygame.Rect(270, 50, 520, 150)
-        pygame.draw.rect(self.screen, (0, 0, 255), self.Titre)
-
-        self.bouton_start = pygame.image.load('../Font/HUD/start/Start.png')
-        self.bouton_start = pygame.transform.scale(self.bouton_start, (260, 260))
-        self.bouton_start_hitbox = pygame.Rect(423, 247, 234, 128)
+        self.fond = pygame.image.load('../Font/HUD/fond/fond.png').convert()
+        self.fond = pygame.transform.scale(self.fond, (1080, 720))
+        screen.blit(self.fond, (0, 0))
         
-        self.bouton_almanach = pygame.Rect(410, 400, 260, 90)
-        pygame.draw.rect(self.screen, (50, 150, 50), self.bouton_almanach)
+        self.ready = pygame.image.load('../Font/HUD/party/ready.png').convert_alpha()
+        self.ready = pygame.transform.scale(self.ready, (400, 110))
+        screen.blit(self.ready, (340, 100))
+
+        self.bouton_start = pygame.image.load('../Font/HUD/start/start1.png')
+        self.bouton_start = pygame.transform.scale(self.bouton_start, (260, 130))
+        self.bouton_start_hitbox = pygame.Rect(410, 250, 260, 130)
+        
+        self.bouton_almanach = pygame.image.load('../Font/HUD/button/almanach.png')
+        self.bouton_almanach = pygame.transform.scale(self.bouton_almanach, (260, 130))
+        self.bouton_almanach_hitbox = pygame.Rect(410, 400, 260, 130)
+        
 
         '''
         A voir
@@ -266,7 +274,8 @@ class Game:
         
         
         screen.blit(self.bouton_retour, (20, 20))
-        screen.blit(self.bouton_start, (410, 180))
+        screen.blit(self.bouton_start, (410, 250))
+        screen.blit(self.bouton_almanach, (410, 400))
 
     def DrawMap_Monde(self):
         #self.fond = pygame.Rect(0, 0, 1080, 720)
@@ -277,6 +286,12 @@ class Game:
         self.image = pygame.image.load('../Font/HUD/monde_0.png').convert_alpha()
         self.image = pygame.transform.scale(self.image, (1080, 720))
         screen.blit(self.image, (0,0))
+        
+        self.font_worldname = pygame.font.Font('../Font/pixelised.ttf', 100)
+        self.textw = self.font_worldname.render("World One", True, (255,255,255))
+        self.textw1 = self.font_worldname.render("World One", True, (119,80,29))
+        screen.blit(self.textw1, (285, 45))
+        screen.blit(self.textw, (280, 40))
         
         self.bouton_retour = pygame.transform.scale(self.bouton_retour, (40, 40))
         self.bouton_retour_hitbox = pygame.Rect(20, 20, 40, 40)
@@ -531,7 +546,7 @@ class Game:
                         if pygame.Rect.collidepoint(self.bouton_start_hitbox, event.pos):
                             self.menu = 'map_monde'
                             self.drawed_first = True
-                        if pygame.Rect.collidepoint(self.bouton_almanach, event.pos):
+                        if pygame.Rect.collidepoint(self.bouton_almanach_hitbox, event.pos):
                             self.menu = 'almanach'
                             self.drawed_first = True
                         self.display()

@@ -493,6 +493,10 @@ class Game:
                     self.input_pseudo.draw(self.screen)
                     self.display()
                 if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE:
+                        self.menu = 'account'
+                        self.drawed_first = True
+                        self.display()
                     if event.key == pygame.K_RETURN or event.key == pygame.K_KP_ENTER:
                         text = self.input_pseudo.text
                         print(text, isinstance(text, str))

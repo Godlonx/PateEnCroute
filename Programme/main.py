@@ -25,7 +25,7 @@ class Game:
         self.running = True
         self.font = pygame.font.Font(None, 40)
         self.drawed_first = True
-        self.menu = 'title'
+        self.menu = 'account'
         
     def Draw_menu(self, num):
         if num == 'title':
@@ -75,7 +75,8 @@ class Game:
     
     def DrawAccount(self):
 
-        self.font_text = pygame.font.SysFont('../Font/pixelised.ttf', 30)
+        self.font_text = pygame.font.Font('../Font/pixelised.ttf', 30)
+        pos = [80, 75, 65, 55, 45, 35, 25, 15, 10, 0]
 
         self.fond = pygame.image.load('../Font/HUD/fond/fond n&b.png').convert()
         self.fond = pygame.transform.scale(self.fond, (1080, 720))
@@ -121,8 +122,11 @@ class Game:
             self.delete1_hitbox = pygame.Rect(280, 150, 40, 40)
             screen.blit(self.delete1, (280, 150))
 
-            self.text_1 = self.font_text.render('AQUAMANCIE', False, (255,255,255))
-            screen.blit(self.text_1, (150, 382))
+            self.pseudo = self.db('Select pseudo From players where id = ?', (1,))[0][0]  # Une chr = 13 px
+            
+            self.text_1 = self.font_text.render(self.pseudo, True, (255,255,255))
+            screen.blit(self.text_1, (135+ pos[len(self.pseudo)-1], 387))
+            # 
 
             
             self.create1 = None
@@ -150,6 +154,11 @@ class Game:
             self.delete2_hitbox = pygame.Rect(590, 150, 40, 40)
     
             screen.blit(self.delete2, (590, 150))
+
+            self.pseudo = self.db('Select pseudo From players where id = ?', (2,))[0][0]  # Une chr = 13 px
+            
+            self.text_2 = self.font_text.render(self.pseudo, True, (255,255,255))
+            screen.blit(self.text_2, (445+ pos[len(self.pseudo)-1], 387))
             
             self.create2 = None
         else:
@@ -177,7 +186,11 @@ class Game:
     
             screen.blit(self.delete3, (900, 150))
             
+            self.pseudo = self.db('Select pseudo From players where id = ?', (3,))[0][0]  # Une chr = 13 px
             
+            self.text_3 = self.font_text.render(self.pseudo, True, (255,255,255))
+            screen.blit(self.text_3, (755+ pos[len(self.pseudo)-1], 387))
+
             self.create3 = None
         else:
             self.create3 = pygame.image.load('../Font/HUD/plus/sprite_plus0.png')

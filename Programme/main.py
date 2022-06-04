@@ -76,6 +76,7 @@ class Game:
     def DrawAccount(self):
 
         self.font_text = pygame.font.Font('../Font/pixelised.ttf', 30)
+        self.ltlfont_text = pygame.font.Font('../Font/pixelised.ttf', 20)
         pos = [80, 75, 65, 55, 45, 35, 25, 15, 10, 0]
 
         self.fond = pygame.image.load('../Font/HUD/fond/fond n&b.png').convert()
@@ -133,6 +134,8 @@ class Game:
             
             self.text_1 = self.font_text.render(self.pseudo, True, (255,255,255))
             screen.blit(self.text_1, (135+ pos[len(self.pseudo)-1], 387))
+            self.prof1= self.ltlfont_text.render('Profile 1:', True, (255,255,255))
+            screen.blit(self.prof1, (175, 360))
             # 
 
             
@@ -169,6 +172,8 @@ class Game:
             
             self.text_2 = self.font_text.render(self.pseudo, True, (255,255,255))
             screen.blit(self.text_2, (445+ pos[len(self.pseudo)-1], 387))
+            self.prof2 = self.ltlfont_text.render('Profile 2:', True, (255,255,255))
+            screen.blit(self.prof2, (485, 360))
             
             self.create2 = None
         else:
@@ -203,6 +208,8 @@ class Game:
             
             self.text_3 = self.font_text.render(self.pseudo, True, (255,255,255))
             screen.blit(self.text_3, (755+ pos[len(self.pseudo)-1], 387))
+            self.prof3 = self.ltlfont_text.render('Profile 3:', True, (255,255,255))
+            screen.blit(self.prof3, (795, 360))
 
             self.create3 = None
         else:

@@ -109,7 +109,7 @@ class Game:
             self.save1 = pygame.transform.scale(self.save1, (210, 500))
             screen.blit(self.save1, (120, 140))
             self.pdp1 = pygame.image.load('../Font/HUD/party/pdp.png').convert_alpha()
-            self.pdp1 = pygame.transform.scale(self.pdp1, (72*1.5, 66*1.5))
+            self.pdp1 = pygame.transform.scale(self.pdp1, (108, 66*1.5))
             screen.blit(self.pdp1, (165, 250))
             
             ## sprite_continue0.png
@@ -493,6 +493,10 @@ class Game:
                     self.input_pseudo.draw(self.screen)
                     self.display()
                 if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE:
+                        self.menu = 'account'
+                        self.drawed_first = True
+                        self.display()
                     if event.key == pygame.K_RETURN or event.key == pygame.K_KP_ENTER:
                         text = self.input_pseudo.text
                         print(text, isinstance(text, str))

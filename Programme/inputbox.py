@@ -9,7 +9,6 @@ class InputBox:
     def __init__(self, x, y, w, h, text=''):
         self.COLOR_INACTIVE = pg.Color('lightskyblue3')
         self.COLOR_ACTIVE = pg.Color('dodgerblue2')
-        self.font = pg.font.Font(None, 32)
         self.rect = pg.Rect(x, y, w, h)
         self.font=pg.font.Font('../Font/pixelised.ttf',32)
         self.color = self.COLOR_INACTIVE
@@ -28,7 +27,7 @@ class InputBox:
                 elif len(self.text) <= 9:
                     self.text += event.unicode
                 # Re-render the text.
-                self.txt_surface = self.font.render(self.text, True, self.color)
+                self.txt_surface = self.font.render(self.text, True, 'white')
 
 
 

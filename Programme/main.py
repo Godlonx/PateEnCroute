@@ -89,7 +89,7 @@ class Game:
         screen.blit(self.title, (190, 20))
         
         self.toptext = pygame.font.Font('../Font/pixelised.ttf', 75)
-        self.savetitle = self.toptext.render("Choose your save", True, (255,255,255))
+        self.savetitle = self.toptext.render("Choose your file", True, (255,255,255))
         self.textw1 = self.toptext.render("World One", True, (119,80,29))
         screen.blit(self.savetitle, (200, 15))
 
@@ -134,8 +134,8 @@ class Game:
             
             self.text_1 = self.font_text.render(self.pseudo, True, (255,255,255))
             screen.blit(self.text_1, (135+ pos[len(self.pseudo)-1], 387))
-            self.prof1= self.ltlfont_text.render('Profile 1:', True, (255,255,255))
-            screen.blit(self.prof1, (175, 360))
+            self.prof1= self.ltlfont_text.render('File 1:', True, (255,255,255))
+            screen.blit(self.prof1, (195, 360))
             # 
 
             
@@ -172,8 +172,8 @@ class Game:
             
             self.text_2 = self.font_text.render(self.pseudo, True, (255,255,255))
             screen.blit(self.text_2, (445+ pos[len(self.pseudo)-1], 387))
-            self.prof2 = self.ltlfont_text.render('Profile 2:', True, (255,255,255))
-            screen.blit(self.prof2, (485, 360))
+            self.prof2 = self.ltlfont_text.render('File 2:', True, (255,255,255))
+            screen.blit(self.prof2, (505, 360))
             
             self.create2 = None
         else:
@@ -208,8 +208,8 @@ class Game:
             
             self.text_3 = self.font_text.render(self.pseudo, True, (255,255,255))
             screen.blit(self.text_3, (755+ pos[len(self.pseudo)-1], 387))
-            self.prof3 = self.ltlfont_text.render('Profile 3:', True, (255,255,255))
-            screen.blit(self.prof3, (795, 360))
+            self.prof3 = self.ltlfont_text.render('File 3:', True, (255,255,255))
+            screen.blit(self.prof3, (815, 360))
 
             self.create3 = None
         else:
@@ -219,11 +219,14 @@ class Game:
             screen.blit(self.create3, (841, 382))
 
     def DrawRegister(self, account):
-        self.fond = pygame.Rect(390, 210, 300, 300)
-        pygame.draw.rect(self.screen, (44, 47, 51), self.fond)
+        self.fondcase = pygame.image.load('../Font/HUD/party/case.png').convert_alpha()
+        self.fondcase = pygame.transform.scale(self.fondcase, (300, 300))
+        screen.blit(self.fondcase, (390,210))
         
-        self.fond = pygame.Rect(390, 210, 300, 300)
-        pygame.draw.rect(self.screen, (0, 0, 0), self.fond, 2)
+        #self.fond = pygame.Rect(390, 210, 300, 300)
+        #pygame.draw.rect(self.screen, (44, 47, 51), self.fond)
+        #self.fond = pygame.Rect(390, 210, 300, 300)
+        #pygame.draw.rect(self.screen, (0, 0, 0), self.fond, 2)
     
         
         self.bouton_retour = pygame.image.load('../Font/HUD/button/sprite_button_x_red0.png')
@@ -234,15 +237,18 @@ class Game:
         screen.blit(self.bouton_retour, (635, 230))
 
         
-        self.input_pseudo = InputBox(440, 360, 200, 50) # X, Y, Longeur, Hauteur
+        self.input_pseudo = InputBox(440, 350, 200, 50) # X, Y, Longeur, Hauteur
         
-        self.entree = pygame.image.load('../Font/HUD/button/sprite_continue0.png').convert_alpha()
-        self.entree = pygame.transform.scale(self.entree, (200, 50))
-        self.entree_hitbox = pygame.Rect(440, 425, 200, 50)
-        screen.blit(self.entree, (440, 425))
+        self.entree = pygame.image.load('../Font/HUD/button/accept.png').convert_alpha()
+        self.entree = pygame.transform.scale(self.entree, (190, 70))
+        self.entree_hitbox = pygame.Rect(440, 425, 190, 70)
+        screen.blit(self.entree, (445, 425))
+
+        self.quest = pygame.font.Font('../Font/pixelised.ttf', 30)
+        self.quest = self.quest.render('What\'s your name?', True, (255,255,255))
+        screen.blit(self.quest, (400, 300))
         
-        self.entree = pygame.Rect(440, 425, 200, 50)
-        pygame.draw.rect(self.screen,(0, 255, 0), self.entree)
+        
         
 
         if account == 1:
@@ -315,11 +321,13 @@ class Game:
 
     def DrawPates(self):
         # tab de 6x7
-        self.fond = pygame.Rect(0, 0, 1080, 720)
-        pygame.draw.rect(self.screen, (44, 47, 51), self.fond)
-        self.choix = pygame.Rect(20, 20, 640 , 680)
-        pygame.draw.rect(self.screen, (0, 0, 0), self.choix)
-        
+        self.fond = pygame.image.load('../Font/HUD/fond/fond.png').convert_alpha()
+        self.fond = pygame.transform.scale(self.fond, (1080, 720))
+        screen.blit(self.fond, (0, 0))
+        self.fen = pygame.image.load('../Font/HUD/fond/fondnoir.png').convert_alpha()
+        self.fen = pygame.transform.scale(self.fen, (640, 680))
+        screen.blit(self.fen, (20, 20))
+
 
         if self.drawed_first:
             self.pates_choisis = [1,2,3,4,5,6]
@@ -350,7 +358,7 @@ class Game:
 
         self.z_choisis = pygame.Rect(20, 20, 640, 90)
 
-        pygame.draw.rect(self.screen, (0, 0, 0), self.z_choisis)
+        #pygame.draw.rect(self.screen, (0, 0, 0), self.z_choisis)
         self.pates_choix = {}
         
         self.numtest = self.font.render('1', True, (0, 0, 0))
@@ -372,7 +380,7 @@ class Game:
         pygame.draw.rect(self.screen, (44, 47, 51), self.fond)
 
         self.bouton_retour = pygame.image.load('../Font/HUD/button/sprite_leave_red0.png').convert_alpha()
-        self.bouton_retour = pygame.transform.scale(self.bouton_retour, (50, 50))
+        self.bouton_retour = pygame.transform.scale(self.bouton_retour, (40, 40))
         self.bouton_retour_hitbox = pygame.Rect(20, 20, 50, 50)
 
         self.PatesMenu = pygame.Rect(120, 20, 400, 50)
@@ -535,7 +543,7 @@ class Game:
                         if pygame.Rect.collidepoint(self.bouton_retour_hitbox, event.pos):
                             self.menu = 'account'
                             self.drawed_first = True
-                        if pygame.Rect.collidepoint(self.entree, event.pos) and len(self.input_pseudo.text) > 0:
+                        if pygame.Rect.collidepoint(self.entree_hitbox, event.pos) and len(self.input_pseudo.text) > 0:
                             text = self.input_pseudo.text
                             print(text, isinstance(text, str))
                             id = self.input_pseudo.id

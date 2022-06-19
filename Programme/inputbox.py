@@ -27,7 +27,7 @@ class InputBox:
                 elif len(self.text) <= 9:
                     self.text += event.unicode
                 # Re-render the text.
-                self.txt_surface = self.font.render(self.text, True, 'white')
+                self.txt_surface = self.font.render(self.text, True, (255,255,255))
 
 
 

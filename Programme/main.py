@@ -1,5 +1,6 @@
 from sqlite3 import *
 import pygame
+from Player import Player
 from inputbox import InputBox
 from plateau import Terrain
 
@@ -25,7 +26,7 @@ class Game:
         self.running = True
         self.font = pygame.font.Font(None, 40)
         self.drawed_first = True
-        self.menu = 'account'
+        self.menu = 'title'
         
     def Draw_menu(self, num):
         if num == 'title':
@@ -253,6 +254,7 @@ class Game:
 
         if account == 1:
             self.input_pseudo.id = 1
+            
         elif account == 2:
             self.input_pseudo.id = 2
         else:
@@ -281,7 +283,7 @@ class Game:
         self.bouton_stats = pygame.Rect(410, 540, 260, 90)
         pygame.draw.rect(self.screen, (250, 150, 50), self.bouton_stats)
         '''
-
+        self.bouton_retour = pygame.image.load('../Font/HUD/button/sprite_leave_red0.png').convert_alpha()
         self.bouton_retour = pygame.transform.scale(self.bouton_retour, (40, 40))
         self.bouton_retour_hitbox = pygame.Rect(20, 20, 40, 40)
         
@@ -301,8 +303,8 @@ class Game:
         screen.blit(self.image, (0,0))
         
         self.font_worldname = pygame.font.Font('../Font/pixelised.ttf', 100)
-        self.textw = self.font_worldname.render("World One", True, (255,255,255))
-        self.textw1 = self.font_worldname.render("World One", True, (119,80,29))
+        self.textw = self.font_worldname.render("World 1", True, (255,255,255))
+        self.textw1 = self.font_worldname.render("World 1", True, (119,80,29))
         screen.blit(self.textw1, (285, 45))
         screen.blit(self.textw, (280, 40))
         
@@ -314,7 +316,7 @@ class Game:
 
         self.co_lvl = [(100, 244), (295, 397), (490, 244), (685, 397), (880, 244)]
 
-        self.inf_lvl = 4
+        self.inf_lvl = self.player.lvl-1
 
         self.lvl = pygame.Rect(self.co_lvl[self.inf_lvl][0], self.co_lvl[self.inf_lvl][1], 100, 100)
         pygame.draw.rect(self.screen, (0,255,255), self.lvl)
@@ -489,6 +491,7 @@ class Game:
                                 self.db2('Delete From players where id=1')
                             elif pygame.Rect.collidepoint(self.continue1_hitbox, event.pos):
                                 self.connect(1)
+                                self.player = Player(1)
                                 self.menu = 'party'
                                 self.drawed_first = True
                         if self.create2 != None:
@@ -501,6 +504,7 @@ class Game:
                                 self.db2('Delete From players where id=2')
                             if pygame.Rect.collidepoint(self.continue2_hitbox, event.pos):
                                 self.connect(2)
+                                self.player = Player(2)
                                 self.menu = 'party'
                                 self.drawed_first = True
                         if self.create3 != None:
@@ -513,6 +517,7 @@ class Game:
                                 self.db2('Delete From players where id=3')
                             if pygame.Rect.collidepoint(self.continue3_hitbox, event.pos):
                                 self.connect(3)
+                                self.player = Player(3)
                                 self.menu = 'party'
                                 self.drawed_first = True
                         self.display()
@@ -528,10 +533,12 @@ class Game:
                         self.drawed_first = True
                         self.display()
                     if event.key == pygame.K_RETURN or event.key == pygame.K_KP_ENTER:
-                        text = self.input_pseudo.text
+                        text = self.input_pseudo.text.upper()
                         print(text, isinstance(text, str))
                         id = self.input_pseudo.id
                         self.db("Insert into players(id, pseudo, lvl, monde, money) VALUES(?, ?, ?, ?, ?)", (id, text, 1, 1, 0))
+                        self.player = Player(id)
+                        print(self.player.monde, self.player.psuedo)
                         self.menu = 'party'
                         self.display()
                     
@@ -548,6 +555,7 @@ class Game:
                             print(text, isinstance(text, str))
                             id = self.input_pseudo.id
                             self.db("Insert into players(id, pseudo, lvl, monde, money) VALUES(?, ?, ?, ?, ?)", (id, text, 1, 1, 0))
+                            self.player = Player(id)
                             self.menu = 'party'
                             self.drawed_first = True
                         self.display()
@@ -577,10 +585,10 @@ class Game:
                             self.drawed_first = True
                         
                         self.display()
-            
             elif self.menu == 'choix_pates':
                 if event.type == pygame.MOUSEBUTTONUP:
                     if event.button == 1:
+            
                         if pygame.Rect.collidepoint(self.retour, event.pos):
                             self.menu = 'party'
                             self.drawed_first = True
@@ -601,7 +609,8 @@ class Game:
                         else:
                             if pygame.Rect.collidepoint(self.start, event.pos):
                                 self.menu = 'terrain'
-                                self.terrain = Terrain(self.pates_choisis)
+                                self.terrain = Terrain(self.pates_choisis, 1)
+                                self.terrain.first_draw(screen) 
                                 self.drawed_first = True
                             self.display()
             
@@ -621,10 +630,10 @@ class Game:
                             self.color_pas = 5
                             self.refresh('pates')
                         if pygame.Rect.collidepoint(self.PlantesMenu, event.pos):
-                            print(20000000)
                             self.color_spe = 220
                             self.color_pas = -10
                             self.refresh('plantes')
+                            print(20000000)
 
                         self.display()
             
@@ -685,7 +694,7 @@ class Game:
     
     def run(self):
         self.display()
-        p, n = 0, 0
+        p, n, v = 0, 0, 0
         
         while self.running:
             if self.menu == 'title':
@@ -696,7 +705,10 @@ class Game:
             if self.menu == 'terrain':
                 p+= 1
                 if p%10 == 0:
-                    self.terrain.update_pate(self.screen)
+                    v += 1
+                    if v%8 == 0:
+                        self.terrain.add_enemy()
+                    self.terrain.update_terrain(self.screen)
             self.gestion_events()
             self.clock.tick(60)
 

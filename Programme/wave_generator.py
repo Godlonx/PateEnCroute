@@ -35,13 +35,14 @@ class Wave():
         self.chall = [] # liste de challenge selectionné
         self.compo = [] # ennemis selectionné pour la vague
         self.mob_spawn_list = [] # tab a défilé pour savoir quelle mob spawn
+        self.create_wave()
 
 
     def bestiaire_dispo(self): # récupéré depuis la database tout les mobs du monde: "self.monde"
-        idmob = self.db('Select id_mob from Bestiaire where id_monde like ' + str(self.monde))
+        idmob = self.db(f'Select id_mob from Bestiaire where id_monde = {self.monde}')
         for i in range(len(idmob)):
-            self.mob_dispo.append(self.db('Select nom, pwr_lvl, id, spawn_rate from Plantes where id like ' + str(idmob[i][0])))
-        return self.mob_dispo
+            self.mob_dispo.append(self.db(f'Select nom, pwr_lvl, id, spawn_rate from Plantes where id = {idmob[i][0]}'))
+
 
 
 
@@ -101,19 +102,19 @@ class Wave():
         self.mob_spawn_list.append(spawn[0])
         self.mob_spawn_list.append(spawn[0])
 
-        for drap in range(self.flag):
+        for _ in range(self.flag):
             while val < val_max // self.flag: # lorsque l'on summon la wave : si la val est >= 0 alors summon l'unité de cette id, sinon summon avec un délaie de ~6 frame les ||val|| prochaine unités (et affiché le texte de la wave)
                 self.mob_spawn_list.append(spawn[randint(0,len(spawn) - 1)])
                 val = val + 1
             val = 0
             vague_nbr = randint(10, 10 + self.difficulty * 3 + int(self.val_pwr * 0.2))
             self.mob_spawn_list.append(vague_nbr * -1)
-            for h in range(vague_nbr):
+            for _ in range(vague_nbr):
                 self.mob_spawn_list.append(spawn[randint(0,len(spawn) - 1)])
 
 
 
-    def create_wave(self):
+    def create_wave(self): # exécute toute les étapes de créations de la vague en une seule fonction
         self.bestiaire_dispo()
         self.compo = self.selection_mobs()
         self.challenge()

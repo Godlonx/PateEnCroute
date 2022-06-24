@@ -77,9 +77,10 @@ class Terrain:
                         if pygame.Rect.collidepoint(self.tab_case[case].pos, event.pos):
                             if self.tab_case[case].used == None:
                                 self.tab_case[case].used = self.using_pates
-                                self.tab_case[case].lien = self.pates[f'pate{self.using_pates}'].lien
                                 self.tab_case[case].event = 'Normal'
-                                self.tab_case[case].cd = self.pates[f'pate{self.using_pates}'].shoot_cd
+                                self.tab_case[case].anim_normal = f'../Font/pates/pate{self.using_pates}/0.png'
+                                self.tab_case[case].anim_tir = f'../Font/pates/tir{self.using_pates}/0.png'
+                                self.tab_case[case].lien = f'../Font/pates/pate{self.using_pates}/0.png'
                                 self.pates[f'pate{self.using_pates}'].recup = self.pates[f'pate{self.using_pates}'].cd
                                 self.pates[f'pate{self.using_pates}'].usable = False
                                 self.steaks -= self.pates[f'pate{self.using_pates}'].cout
@@ -118,27 +119,81 @@ class Terrain:
         else:
             for _ in range(abs(self.mob_wave.pop())):
                 self.terrain_enemy[randint(0, 4)].append(Plante(self.mob_wave.pop()).id)
-        print(self.terrain_enemy)
 
     def update_case(self, case, screen):
-        if len(self.terrain_enemy[case.ligne]) > 0 and case.cd == 0:
+
+        if case.event == 'Normal':
+            if len(self.terrain_enemy[case.ligne]) > 0:
+                if case.anim_cd == -12:
+                    case.event = 'Tir'
+                    case.anim_cd = 0
+                elif case.anim_cd > -12:
+                    case.anim_cd -= 1
+
+        elif case.event == 'Tir':
+            if len(self.terrain_enemy[case.ligne]) > 0:
+                if case.anim_cd == 9:
+                    case.event = 'Normal'
+                elif case.anim_cd < 9:
+                    case.anim_cd += 1
+            elif len(self.terrain_enemy[case.ligne]) == 0:
+                case.event = 'Normal'
+            
+        if case.event == 'Normal':
+            case.anim_normal = self.anim_pate(case.anim_normal, 10)
+            case.lien = case.anim_normal
+            case.anim_tir = f'../Font/pates/tir{case.used}/0.png'
+        elif case.event == 'Tir':
+            case.anim_tir = self.anim_pate(case.anim_tir, 10)
+            case.lien = case.anim_tir
+            case.anim_normal = f'../Font/pates/pate{case.used}/0.png'
+
+
+        
+        '''if case.event == 'Normal':
+            if len(self.terrain_enemy[case.ligne]) > 0 and case.cd == 0:
+                case.event = 'Tir'
+                case.lien = f'../Font/pates/tir{case.used}/0.png'
+                case.anim_cd = 10
+            elif case.cd > 0:
+                case.cd -= 1
+            else:
+                case.lien = f'../Font/pates/pate{case.used}/0.png'
+            self.anim_pate(case.lien, 10)
+        elif case.event == 'Tir':
+            if case.anim_cd == 0 or len(self.terrain_enemy[case.ligne]) == 0:
+                case.event = 'Normal'
+                case.lien = f'../Font/pates/pate{case.used}/0.png'
+                case.cd = 10
+            if case.anim_cd > 0:
+                case.anim_cd -= 1
+                self.anim_pate(case.lien, 10)'''
+       
+
+
+
+        
+        '''if len(self.terrain_enemy[case.ligne]) > 0 and case.cd == 0:
             if case.event != 'Tir':
                 case.event = 'Tir'
                 case.lien = f'../Font/pates/tir{case.used}/0.png'
+                case.anim_cd = 50
             
-        elif len(self.terrain_enemy[case.ligne]) == 0 or case.cd == 30:
+        elif len(self.terrain_enemy[case.ligne]) == 0 or case.anim_cd == 0:
             if case.event != 'Normal':
                 case.event = 'Normal'
                 case.lien = f'../Font/pates/pate{case.used}/0.png'
+                case.cd = 50
             
         if case.event == 'Normal':
             if case.cd > 0:
                 case.cd -= 1
             case.lien = self.anim_pate(case.lien, 10)
         elif case.event == 'Tir':
-            if case.cd < 10:
-                case.cd += 1
-            case.lien = self.anim_pate(case.lien, 10)
+            if case.anim_cd > 0:
+                case.cd -= 1
+            case.lien = self.anim_pate(case.lien, 10)'''
+        print(case.lien, case.event)
         screen.blit(pygame.image.load(case.lien), (case.co[0], case.co[1]+10))
             
 
@@ -155,7 +210,10 @@ class case:
     def __init__(self, id, rect, co, ligne) -> None:
         self.id = id
         self.ligne = ligne
-        self.cd = None
+        self.cd = 10
+        self.anim_normal = None
+        self.anim_tir = None
+        self.anim_cd = 20
         self.event = None
         self.used = None # L'id du paté present dessus.
         self.pos = rect
@@ -169,7 +227,7 @@ class pate_graine:
         self.nom = self.get_stat('nom')
         self.hitbox = rect
         self.lien = lien
-        self.shoot_cd = 8
+        self.shoot_cd = 10
         self.usable = True
         self.cout = self.get_stat('cout')[0]
         self.cd = self.get_stat('cd')[0]

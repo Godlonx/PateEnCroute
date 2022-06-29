@@ -32,8 +32,8 @@ class Terrain:
         self.wave_inf = pygame.Rect(900, 670, 150, 20) # penser à modifier la taille en fonction du nombre de wave
         pygame.draw.rect(screen, (0, 0, 255), self.wave_inf)
 
-        for i in range(6):
-            pygame.draw.rect(screen, (0,255,255), self.pates[f'pate{self.info_pates[i]}'].hitbox)
+        for i in self.info_pates:
+            pygame.draw.rect(screen, (0,255,255), self.pates[f'pate{i}'].hitbox)
         
         self.update_terrain(screen)
 
@@ -48,7 +48,7 @@ class Terrain:
             for j in range(9):
                 n += 1
                 self.tab_case[f'case{n}'] = case(n, pygame.Rect(150+j*self.t_case, 150+i*self.t_case, self.t_case, self.t_case), (150+j*self.t_case, 150+i*self.t_case), i)
-        for i in range(6):
+        for i in range(len(self.info_pates)):
             lien = f'../Font/pates/pate{self.info_pates[i]}/0.png'
             #pate = pygame.transform.scale(pate, (100, 100))
             self.pates[f'pate{self.info_pates[i]}'] = pate_graine(self.info_pates[i], pygame.Rect(120+i*105, 10, 95, 70), lien)
@@ -140,60 +140,14 @@ class Terrain:
                 case.event = 'Normal'
             
         if case.event == 'Normal':
-            case.anim_normal = self.anim_pate(case.anim_normal, 10)
             case.lien = case.anim_normal
+            case.anim_normal = self.anim_pate(case.anim_normal, 10)
             case.anim_tir = f'../Font/pates/tir{case.used}/0.png'
         elif case.event == 'Tir':
-            case.anim_tir = self.anim_pate(case.anim_tir, 10)
             case.lien = case.anim_tir
+            case.anim_tir = self.anim_pate(case.anim_tir, 10)
             case.anim_normal = f'../Font/pates/pate{case.used}/0.png'
 
-
-        
-        '''if case.event == 'Normal':
-            if len(self.terrain_enemy[case.ligne]) > 0 and case.cd == 0:
-                case.event = 'Tir'
-                case.lien = f'../Font/pates/tir{case.used}/0.png'
-                case.anim_cd = 10
-            elif case.cd > 0:
-                case.cd -= 1
-            else:
-                case.lien = f'../Font/pates/pate{case.used}/0.png'
-            self.anim_pate(case.lien, 10)
-        elif case.event == 'Tir':
-            if case.anim_cd == 0 or len(self.terrain_enemy[case.ligne]) == 0:
-                case.event = 'Normal'
-                case.lien = f'../Font/pates/pate{case.used}/0.png'
-                case.cd = 10
-            if case.anim_cd > 0:
-                case.anim_cd -= 1
-                self.anim_pate(case.lien, 10)'''
-       
-
-
-
-        
-        '''if len(self.terrain_enemy[case.ligne]) > 0 and case.cd == 0:
-            if case.event != 'Tir':
-                case.event = 'Tir'
-                case.lien = f'../Font/pates/tir{case.used}/0.png'
-                case.anim_cd = 50
-            
-        elif len(self.terrain_enemy[case.ligne]) == 0 or case.anim_cd == 0:
-            if case.event != 'Normal':
-                case.event = 'Normal'
-                case.lien = f'../Font/pates/pate{case.used}/0.png'
-                case.cd = 50
-            
-        if case.event == 'Normal':
-            if case.cd > 0:
-                case.cd -= 1
-            case.lien = self.anim_pate(case.lien, 10)
-        elif case.event == 'Tir':
-            if case.anim_cd > 0:
-                case.cd -= 1
-            case.lien = self.anim_pate(case.lien, 10)'''
-        print(case.lien, case.event)
         screen.blit(pygame.image.load(case.lien), (case.co[0], case.co[1]+10))
             
 

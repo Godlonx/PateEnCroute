@@ -3,6 +3,7 @@ import sqlite3
 class Plante:
     def __init__(self, id) -> None:
         self.id = id
+        self.pos_x = 0
         self.nom = self.get_stat('nom')
         self.pv = self.get_stat('pv')
         self.atk = self.get_stat('atk')

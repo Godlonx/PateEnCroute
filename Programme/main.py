@@ -26,7 +26,7 @@ class Game:
         self.running = True
         self.font = pygame.font.Font(None, 40)
         self.drawed_first = True
-        self.menu = 'title'
+        self.menu = 'choix_pates'
         
     def Draw_menu(self, num):
         if num == 'title':

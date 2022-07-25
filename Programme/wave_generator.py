@@ -63,12 +63,12 @@ class Wave():
             if self.mob_dispo[i][0][1] == -1:
                 select.append(self.mob_dispo[i][0])
             elif self.mob_dispo[i][0][1] > 0 <= self.val_pwr:
-                print((self.mob_dispo[i][0][0], testproba(self.mob_dispo[i][0][1], self.val_pwr, self.difficulty))) # sert pour test
+                #print((self.mob_dispo[i][0][0], testproba(self.mob_dispo[i][0][1], self.val_pwr, self.difficulty))) # sert pour test
                 if randint(0,int((1 + self.mob_dispo[i][0][1]) * 5)) <= int((self.val_pwr / 2) * (1 + ((self.difficulty * 2) / 10))):
                     select.append(self.mob_dispo[i][0])
                     self.diff_lvl += self.mob_dispo[i][0][1]
         # diff_lvl peut servir a voir si la difficulté est trop haute ou trop basse par rapport a la moyenne et alors ajustez la difficulté avec des évenemnts aléatoires, terrains plus compliqué et/ou condition de victoire...
-        print(select)
+        #print(select)
         return select
 
 
@@ -93,11 +93,11 @@ class Wave():
         val_max = randint(int(v * 0.9), int(v * 1.1))
         val = 0
         spawn = [] # spawn potential
-        print(self.compo)
+        #print(self.compo)
         for i in range(len(self.compo)):
             for j in range(self.compo[i][3]):
                 spawn.append(self.compo[i][2])
-        print(spawn)
+        #print(spawn)
         self.mob_spawn_list.append(spawn[0]) # être sur que les 3 premiers végétaux soit des trucs basiques, puis après roues libres
         self.mob_spawn_list.append(spawn[0])
         self.mob_spawn_list.append(spawn[0])
@@ -118,10 +118,8 @@ class Wave():
         self.bestiaire_dispo()
         self.compo = self.selection_mobs()
         self.challenge()
-        print(self.compo)
-        print(self.flag)
         self.file_mobs()
-        print(self.mob_spawn_list)
+
 
 
 def testproba(val, pwr, diff): # sert a testé le pourcentage de chance de pop d'un mob dans une compo avec plein de paramètre

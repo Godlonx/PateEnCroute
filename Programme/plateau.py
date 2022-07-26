@@ -14,8 +14,13 @@ class Terrain:
         self.tab_case = {}
         self.info_pates = pates
         self.wave = Wave(monde, 15, 2)
+        '''  A mettre apres les test lorsque l'on auras tous les sprites :
+        
         self.mob_wave = self.wave.mob_spawn_list
         self.mob_wave.reverse()
+
+        '''
+        self.mob_wave = [0,0,0,0,0,0]
         self.monde = monde
         self.terrain_enemy = [[], [], [], [], []]
         self.using_pates = None
@@ -51,8 +56,9 @@ class Terrain:
         for i in range(len(self.info_pates)):
             lien = f'../Font/pates/pate{self.info_pates[i]}/0.png'
             #pate = pygame.transform.scale(pate, (100, 100))
-            self.pates[f'pate{self.info_pates[i]}'] = pate_graine(self.info_pates[i], pygame.Rect(120+i*105, 10, 95, 70), lien)
+            self.pates[f'pate{self.info_pates[i]}'] = socket(self.info_pates[i], pygame.Rect(120+i*105, 10, 95, 70), lien)
         self.terrain = pygame.image.load('../Font/Terrain/damier.png')
+        
         screen.blit(self.terrain, (150,150))
           
 
@@ -84,14 +90,12 @@ class Terrain:
                                 self.pates[f'pate{self.using_pates}'].recup = self.pates[f'pate{self.using_pates}'].cd
                                 self.pates[f'pate{self.using_pates}'].usable = False
                                 self.steaks -= self.pates[f'pate{self.using_pates}'].cout
-                                
                     self.using_pates = None
                                 
                 if pygame.Rect.collidepoint(self.pause, event.pos):
                     self.drawed_first = True
                     return 'pause'
                 return None
-
 
     def update_terrain(self, screen):
         self.terrain = pygame.image.load('../Font/Terrain/damier.png')
@@ -110,15 +114,30 @@ class Terrain:
             if self.tab_case[case].lien != None:
                 self.update_case(self.tab_case[case], screen)
 
+        for ligne in self.terrain_enemy:
+            for plante in ligne:
+                if not plante[0].load:
+                    image = pygame.image.load(f'../Font/Plantes/{plante[0].nom}/0.png')
+                    image = pygame.transform.scale(image, (100, 100))
+                    plante.append(image)
+                    plante[0].load = True
+                screen.blit(plante[1], (plante[0].pos_x, plante[0].pos_y))
+
         pygame.display.flip()
 
     def add_enemy(self):
-        # Ajouter les plantes
-        if self.mob_wave[len(self.mob_wave)-1] >= 0:
-            self.terrain_enemy[randint(0, 4)].append(Plante(self.mob_wave.pop()).id)
-        else:
-            for _ in range(abs(self.mob_wave.pop())):
-                self.terrain_enemy[randint(0, 4)].append(Plante(self.mob_wave.pop()).id)
+        print(self.terrain_enemy)
+        if len(self.mob_wave) > 0:
+            # Ajouter les plantes
+            if self.mob_wave[len(self.mob_wave)-1] >= 0:
+                ligne = randint(0, 4)
+                self.terrain_enemy[ligne].append([Plante(self.mob_wave.pop(), ligne)])
+            else:
+                for _ in range(abs(self.mob_wave.pop())):
+                    ligne = randint(0, 4)
+                    self.terrain_enemy[ligne].append([Plante(self.mob_wave.pop(), ligne)])
+
+        
 
     def update_case(self, case, screen):
 
@@ -175,7 +194,7 @@ class case:
         self.co = co
 
 
-class pate_graine:
+class socket:
     def __init__(self, id, rect, lien) -> None:
         self.id = id
         self.nom = self.get_stat('nom')

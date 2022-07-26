@@ -1,3 +1,4 @@
+from os import sched_rr_get_interval
 from sqlite3 import *
 import pygame
 from Player import Player
@@ -333,14 +334,14 @@ class Game:
 
 
         if self.drawed_first:
-            self.pates_choisis = [1,2,3,4,5,6]
+            self.pates_choisis = [0,1,2,3,4,5,]
             self.pates = {}
             n = 0
             for i in range(7):
                 for j in range(6):
                     # 95 par ? avec 10 d'ecart en x et ? d'ecart en y
-                    n += 1
                     self.pates[f'pate{n}'] = [pygame.Rect(30+j*105, 130+i*80, 95, 70),n, (0,255,255)]
+                    n += 1
             self.drawed_first = False
             
                 
@@ -505,9 +506,10 @@ class Game:
 
         
         self.droitechoice = pygame.image.load(f"../Font/HUD/infomonde/{suivant2}.png").convert_alpha()
-        self.droitechoice = pygame.transform.scale(self.droiteechoice, (100, 100))
+        self.droitechoice = pygame.transform.scale(self.droitechoice, (100, 100))
         
         screen.blit(self.gauchechoice, (130, 130))
+        screen.blit(self.droitechoice, (130, 130))
         
 
 

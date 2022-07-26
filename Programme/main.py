@@ -27,7 +27,7 @@ class Game:
         self.running = True
         self.font = pygame.font.Font(None, 40)
         self.drawed_first = True
-        self.menu = 'choixmonde'
+        self.menu = 'title'
         
     def Draw_menu(self, num):
         if num == 'title':
@@ -321,7 +321,7 @@ class Game:
         self.inf_lvl = self.player.lvl-1
 
         self.lvl = pygame.Rect(self.co_lvl[self.inf_lvl][0], self.co_lvl[self.inf_lvl][1], 100, 100)
-        pygame.draw.rect(self.screen, (0,255,255), self.lvl)
+        #pygame.draw.rect(self.screen, (0,255,255), self.lvl)
 
     def DrawPates(self):
         # tab de 6x7
@@ -334,7 +334,7 @@ class Game:
 
 
         if self.drawed_first:
-            self.pates_choisis = [0,1,2,3,4,5,]
+            self.pates_choisis = [0,1,2,3,4,5]
             self.pates = {}
             n = 0
             for i in range(7):
@@ -746,8 +746,7 @@ class Game:
         lien = ''
         for i in tab:
             lien += i+'/'
-        lien = lien[:len(lien)-1]
-        return lien
+        return lien[:len(lien)-1]
     
     def run(self):
         self.display()

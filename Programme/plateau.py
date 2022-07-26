@@ -140,7 +140,6 @@ class Terrain:
         
 
     def update_case(self, case, screen):
-
         if case.event == 'Normal':
             if len(self.terrain_enemy[case.ligne]) > 0:
                 if case.anim_cd == -12:

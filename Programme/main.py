@@ -26,7 +26,7 @@ class Game:
         self.running = True
         self.font = pygame.font.Font(None, 40)
         self.drawed_first = True
-        self.menu = 'title'
+        self.menu = 'choixmonde'
         
     def Draw_menu(self, num):
         if num == 'title':
@@ -48,6 +48,8 @@ class Game:
             self.terrain.draw(self.screen)
         elif num == 'pause':
             self.DrawPause()
+        elif num == 'choixmonde':
+            self.DrawChoixMonde()
 
     def DrawTitle(self):
         if self.drawed_first:
@@ -72,7 +74,7 @@ class Game:
 
         screen.blit(self.bouton_start, (40, 250))
         screen.blit(self.bouton_quit, (780, 250))
-        
+
     def DrawAccount(self):
 
         self.font_text = pygame.font.Font('../Font/pixelised.ttf', 30)
@@ -336,6 +338,7 @@ class Game:
             n = 0
             for i in range(7):
                 for j in range(6):
+                    # 95 par ? avec 10 d'ecart en x et ? d'ecart en y
                     n += 1
                     self.pates[f'pate{n}'] = [pygame.Rect(30+j*105, 130+i*80, 95, 70),n, (0,255,255)]
             self.drawed_first = False
@@ -344,7 +347,7 @@ class Game:
         for pate in self.pates.keys():
             pygame.draw.rect(self.screen, self.pates[pate][2], self.pates[pate][0])
 
-        if len(self.pates_choisis) > 0:
+        if len(self.pates_choisis) == 6:
             self.start = pygame.Rect(720, 600, 250, 80)
             pygame.draw.rect(self.screen, (0, 255, 0), self.start)
             
@@ -395,15 +398,23 @@ class Game:
         self.Deroulant = pygame.Rect(50, 550, 980, 120)
         pygame.draw.rect(self.screen, (255, 255, 255), self.Deroulant, 2)
 
-        self.gauche = pygame.Rect(70, 570, 40, 80)
-        pygame.draw.rect(self.screen, (0,255,0), self.gauche)
-
-        self.droite = pygame.Rect(970, 570, 40, 80)
-        pygame.draw.rect(self.screen, (0, 255, 0), self.droite)
+        self.gauche = pygame.image.load('../Font/HUD/button/arrow_left.png').convert_alpha()
+        self.gauche = pygame.transform.scale(self.gauche, (40, 80))
+        self.gauche_hitbox = pygame.Rect(70, 570, 40, 80)
 
 
+        self.droit = pygame.image.load('../Font/HUD/button/arrow_right.png').convert_alpha()
+        self.droit = pygame.transform.scale(self.droit, (40, 80))
+        self.droite_hitbox = pygame.Rect(970, 570, 40, 80)
+
+        
+        screen.blit(self.droit, (970, 570))
+        screen.blit(self.gauche, (70, 570))
         screen.blit(self.bouton_retour, (20, 20))
         self.refresh()
+
+    def DrawAffiche(self):
+        pass
 
     def Part_plantes(self):
         print('OK chgt plante')
@@ -442,6 +453,7 @@ class Game:
         print(self.curseur, "Valeur du curseur")
 
     def DrawPause(self):
+    
         self.fond = pygame.Rect(290, 210, 500, 300)
         pygame.draw.rect(self.screen, (0, 0, 0), self.fond)
         
@@ -453,6 +465,51 @@ class Game:
 
         self.continuer = pygame.Rect(590, 360, 100, 100)
         pygame.draw.rect(self.screen, (0,255, 0), self.continuer)
+    
+    def DrawChoixMonde(self):
+        accredidation = {"1" : [2, 3], "2" : [4, 5], "3" : [5, 6], "4" : [7, 8], "5" : [7, 8], "6" : [7, 8], "7" : [9], "8" : [9]}
+
+        self.font_text = pygame.font.Font('../Font/pixelised.ttf', 30)
+        self.ltlfont_text = pygame.font.Font('../Font/pixelised.ttf', 20)
+        pos = [80, 75, 65, 55, 45, 35, 25, 15, 10, 0]
+
+        self.fond = pygame.image.load('../Font/HUD/fond/fond n&b.png').convert()
+        self.fond = pygame.transform.scale(self.fond, (1080, 720))
+        
+        self.title = pygame.image.load('../Font/HUD/party/partitre.png').convert_alpha()
+        self.title = pygame.transform.scale(self.title, (700, 70))
+        
+        self.toptext = pygame.font.Font('../Font/pixelised.ttf', 75)
+        self.savetitle = self.toptext.render("Choose new world", True, (255,255,255))
+        self.textw1 = self.toptext.render("World One", True, (119,80,29))
+
+        self.case1 = pygame.image.load('../Font/HUD/party/case choix de parties.png').convert_alpha()
+        self.case1 = pygame.transform.scale(self.case1, (350, 500))
+        self.case2 = pygame.image.load('../Font/HUD/party/case choix de parties.png').convert_alpha()
+        self.case2 = pygame.transform.scale(self.case2, (350, 500))
+
+        screen.blit(self.fond, (0, 0))
+        screen.blit(self.title, (190, 20))
+        screen.blit(self.savetitle, (200, 15))
+        screen.blit(self.case1, (120, 140))
+        screen.blit(self.case2, (610, 140))
+        
+        self.monde = '1'
+
+        suivant1 = accredidation[self.monde][0]
+        suivant2 = accredidation[self.monde][1]
+
+        
+        self.gauchechoice = pygame.image.load(f"../Font/HUD/infomonde/{suivant1}.png").convert_alpha()
+        self.gauchechoice = pygame.transform.scale(self.gauchechoice, (100, 100))
+
+        
+        self.droitechoice = pygame.image.load(f"../Font/HUD/infomonde/{suivant2}.png").convert_alpha()
+        self.droitechoice = pygame.transform.scale(self.droiteechoice, (100, 100))
+        
+        screen.blit(self.gauchechoice, (130, 130))
+        
+
 
     def connect(self, id):
         info = self.db("SELECT money, lvl, monde FROM players where id = ?", (id,))
@@ -487,9 +544,8 @@ class Game:
                         else:
                             if pygame.Rect.collidepoint(self.delete1_hitbox, event.pos):
                                 self.db2('Delete From players where id=1')
-                                self.db2('Delete From unlock where id_player = 1')
                             elif pygame.Rect.collidepoint(self.continue1_hitbox, event.pos):
-                                #self.connect(1)
+                                self.connect(1)
                                 self.player = Player(1)
                                 self.menu = 'party'
                                 self.drawed_first = True
@@ -501,9 +557,8 @@ class Game:
                         else:
                             if pygame.Rect.collidepoint(self.delete2_hitbox, event.pos):
                                 self.db2('Delete From players where id=2')
-                                self.db2('Delete From unlock where id_player = 2')
                             if pygame.Rect.collidepoint(self.continue2_hitbox, event.pos):
-                                #self.connect(2)
+                                self.connect(2)
                                 self.player = Player(2)
                                 self.menu = 'party'
                                 self.drawed_first = True
@@ -515,9 +570,8 @@ class Game:
                         else:
                             if pygame.Rect.collidepoint(self.delete3_hitbox, event.pos):
                                 self.db2('Delete From players where id=3')
-                                self.db2('Delete From unlock where id_player = 3')
                             if pygame.Rect.collidepoint(self.continue3_hitbox, event.pos):
-                                #self.connect(3)
+                                self.connect(3)
                                 self.player = Player(3)
                                 self.menu = 'party'
                                 self.drawed_first = True
@@ -538,8 +592,6 @@ class Game:
                         print(text, isinstance(text, str))
                         id = self.input_pseudo.id
                         self.db("Insert into players(id, pseudo, lvl, monde, money) VALUES(?, ?, ?, ?, ?)", (id, text, 1, 1, 0))
-                        for i in range(6):
-                            self.db("Insert into unlock(id_pate, id_player) Values(?, ?)", (i, id))
                         self.player = Player(id)
                         print(self.player.monde, self.player.psuedo)
                         self.menu = 'party'
@@ -588,7 +640,6 @@ class Game:
                             self.drawed_first = True
                         
                         self.display()
-
             elif self.menu == 'choix_pates':
                 if event.type == pygame.MOUSEBUTTONUP:
                     if event.button == 1:
@@ -610,20 +661,20 @@ class Game:
                                         self.pates_choisis.append(self.pates[pates][1])
                                         self.display()
                                         break
-                        if len(self.pates_choisis) > 0:
+                        else:
                             if pygame.Rect.collidepoint(self.start, event.pos):
                                 self.menu = 'terrain'
                                 self.terrain = Terrain(self.pates_choisis, 1)
                                 self.terrain.first_draw(screen) 
                                 self.drawed_first = True
-                                self.display()
+                            self.display()
             
             elif self.menu == 'almanach':
                 if event.type == pygame.MOUSEBUTTONUP:
                     if event.button == 1:
-                        if pygame.Rect.collidepoint(self.gauche, event.pos) and self.curseur > 0:
+                        if pygame.Rect.collidepoint(self.gauche_hitbox, event.pos) and self.curseur > 0:
                             self.curseur -= 1
-                        if pygame.Rect.collidepoint(self.droite, event.pos) and self.curseur < 21:
+                        if pygame.Rect.collidepoint(self.droite_hitbox, event.pos) and self.curseur < 21:
                             self.curseur += 1
                         if pygame.Rect.collidepoint(self.bouton_retour_hitbox, event.pos):
                             self.menu = 'party'
@@ -715,6 +766,7 @@ class Game:
                     self.terrain.update_terrain(self.screen)
             self.gestion_events()
             self.clock.tick(60)
+
 
 if __name__ == '__main__':
     pygame.init()

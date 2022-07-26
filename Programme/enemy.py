@@ -12,6 +12,7 @@ class Plante:
         self.ms = self.get_stat('ms')
         self.power_lvl = self.get_stat('pwr_lvl')
         self.spawn_rate = self.get_stat('spawn_rate')
+        self.dimension = self.get_stat('')
         self.load = False 
         
 

@@ -20,7 +20,7 @@ class Terrain:
         self.mob_wave.reverse()
 
         '''
-        self.mob_wave = [0,0,0,0,0,0]
+        self.mob_wave = [0,5,0,0,0,0]
         self.monde = monde
         self.terrain_enemy = [[], [], [], [], []]
         self.using_pates = None

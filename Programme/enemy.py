@@ -4,7 +4,7 @@ import pygame
 class Plante:
     def __init__(self, id, ligne) -> None:
         self.id = id
-        self.pos_x = 550
+        self.pos_x = 1080
         self.pos_y = 145+ligne*100
         self.nom = self.get_stat('nom')
         self.pv = self.get_stat('pv')
@@ -12,7 +12,8 @@ class Plante:
         self.ms = self.get_stat('ms')
         self.power_lvl = self.get_stat('pwr_lvl')
         self.spawn_rate = self.get_stat('spawn_rate')
-        
+        self.lien = f'../Font/Plantes/{self.nom}/0.png'
+        self.nb_sprite = self.get_stat('nb_sprites')     
         self.load = False 
         
 

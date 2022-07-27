@@ -116,12 +116,13 @@ class Terrain:
 
         for ligne in self.terrain_enemy:
             for plante in ligne:
-                if not plante[0].load:
-                    image = pygame.image.load(f'../Font/Plantes/{plante[0].nom}/0.png')
-                    image = pygame.transform.scale(image, (100, 100))
-                    plante.append(image)
-                    plante[0].load = True
+                image = pygame.image.load(plante[0].lien)
+                image = pygame.transform.scale(image, (100, 100))
+                plante.append(image)
                 screen.blit(plante[1], (plante[0].pos_x, plante[0].pos_y))
+                self.anim_plante(plante[0])
+                plante[0].pos_x -= plante[0].ms
+
 
         pygame.display.flip()
 
@@ -142,7 +143,7 @@ class Terrain:
     def update_case(self, case, screen):
         if case.event == 'Normal':
             if len(self.terrain_enemy[case.ligne]) > 0:
-                if case.anim_cd == -12:
+                if case.anim_cd == 0:
                     case.event = 'Tir'
                     case.anim_cd = 0
                 elif case.anim_cd > -12:
@@ -172,6 +173,16 @@ class Terrain:
     def anim_pate(self, lien, nb_sprite):
         tab = lien.split('/')
         tab[4] = str((int(tab[4][0])+1)%nb_sprite)+'.png'
+        lien = ''
+        for i in tab:
+            lien += i+'/'
+        lien = lien[:len(lien)-1]
+        return lien
+    
+    def anim_plante(self, plante):
+        lien = plante.lien
+        tab = lien.split('/')
+        tab[4] = str((int(tab[4][0])+1)%plante.nb_sprite)+'.png'
         lien = ''
         for i in tab:
             lien += i+'/'

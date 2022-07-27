@@ -1,4 +1,4 @@
-from os import sched_rr_get_interval
+
 from sqlite3 import *
 import pygame
 from Player import Player
@@ -334,7 +334,7 @@ class Game:
 
 
         if self.drawed_first:
-            self.pates_choisis = [0,1,2,3,4,5]
+            self.pates_choisis = []
             self.pates = {}
             n = 0
             for i in range(7):
@@ -348,7 +348,7 @@ class Game:
         for pate in self.pates.keys():
             pygame.draw.rect(self.screen, self.pates[pate][2], self.pates[pate][0])
 
-        if len(self.pates_choisis) == 6:
+        if len(self.pates_choisis) > 0:
             self.start = pygame.Rect(720, 600, 250, 80)
             pygame.draw.rect(self.screen, (0, 255, 0), self.start)
             
@@ -642,6 +642,7 @@ class Game:
                             self.drawed_first = True
                         
                         self.display()
+            
             elif self.menu == 'choix_pates':
                 if event.type == pygame.MOUSEBUTTONUP:
                     if event.button == 1:
@@ -655,6 +656,14 @@ class Game:
                                 pates = self.pates_choisis.pop()
                                 self.pates[f'pate{pates}'][2] = (0, 255, 255)
                                 self.display()
+
+                            if pygame.Rect.collidepoint(self.start, event.pos):
+                                self.menu = 'terrain'
+                                self.terrain = Terrain(self.pates_choisis, 1)
+                                self.terrain.first_draw(screen) 
+                                self.drawed_first = True
+                                self.display()
+                            
                         if len(self.pates_choisis) < 6:
                             for pates in self.pates.keys():
                                 if pygame.Rect.collidepoint(self.pates[pates][0], event.pos):
@@ -663,14 +672,7 @@ class Game:
                                         self.pates_choisis.append(self.pates[pates][1])
                                         self.display()
                                         break
-                        else:
-                            if pygame.Rect.collidepoint(self.start, event.pos):
-                                self.menu = 'terrain'
-                                self.terrain = Terrain(self.pates_choisis, 1)
-                                self.terrain.first_draw(screen) 
-                                self.drawed_first = True
-                            self.display()
-            
+
             elif self.menu == 'almanach':
                 if event.type == pygame.MOUSEBUTTONUP:
                     if event.button == 1:

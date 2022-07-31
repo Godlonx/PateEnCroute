@@ -121,7 +121,7 @@ class Terrain:
                 plante.append(image)
                 screen.blit(plante[1], (plante[0].pos_x, plante[0].pos_y))
                 self.anim_plante(plante[0])
-                plante[0].pos_x -= plante[0].ms
+                
 
 
         pygame.display.flip()
@@ -180,13 +180,17 @@ class Terrain:
         return lien
     
     def anim_plante(self, plante):
+        plante.pos_x -= plante.ms
         lien = plante.lien
+        print(lien)
         tab = lien.split('/')
+        print(tab)
         tab[4] = str((int(tab[4][0])+1)%plante.nb_sprite)+'.png'
         lien = ''
         for i in tab:
             lien += i+'/'
         lien = lien[:len(lien)-1]
+        print(lien)
         return lien
 
 class case:

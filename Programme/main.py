@@ -340,7 +340,7 @@ class Game:
             for i in range(7):
                 for j in range(6):
                     # 95 par ? avec 10 d'ecart en x et ? d'ecart en y
-                    self.pates[f'pate{n}'] = [pygame.Rect(30+j*105, 130+i*80, 95, 70),n, (0,255,255)]
+                    self.pates[f'pate{n}'] = [pygame.Rect(30+j*105, 130+i*80, 95, 70),n, (0,255,255), ]
                     n += 1
             self.drawed_first = False
             
@@ -757,7 +757,7 @@ class Game:
         while self.running:
             if self.menu == 'title':
                 n += 1
-                if n%7 == 0:
+                if n%16 == 0:
                     self.lien = self.anim(self.lien)
                     self.display()
             if self.menu == 'terrain':
@@ -768,7 +768,7 @@ class Game:
                         self.terrain.add_enemy()
                     self.terrain.update_terrain(self.screen)
             self.gestion_events()
-            self.clock.tick(60)
+            self.clock.tick(144)
 
 
 if __name__ == '__main__':

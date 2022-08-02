@@ -4,7 +4,7 @@ import pygame
 from Player import Player
 from inputbox import InputBox
 from plateau import Terrain
-
+from pate import Pate
 ##### 720x1080 screen
 
 
@@ -27,7 +27,7 @@ class Game:
         self.running = True
         self.font = pygame.font.Font(None, 40)
         self.drawed_first = True
-        self.menu = 'choix_pates'
+        self.menu = 'title'
         
     def Draw_menu(self, num):
         if num == 'title':
@@ -379,6 +379,7 @@ class Game:
             self.Part_plantes()
             self.Part_pates()
             self.drawed_first = False
+            
 
         self.fond = pygame.Rect(0, 0, 1080, 720)
         pygame.draw.rect(self.screen, (44, 47, 51), self.fond)
@@ -418,16 +419,26 @@ class Game:
         pass
 
     def Part_plantes(self):
+        
         print('OK chgt plante')
         self.almanach_plantes = {}
-        for i in range(1, 21):
+        for i in range(0, 17):
             self.almanach_plantes[f'id{i}'] = pygame.Rect(150,565, 80, 90)
 
     def Part_pates(self):
         print('OK chgt pate')
         self.almanach_pates = {}
-        for i in range(1, 21):
-            self.almanach_pates[f'id{i}'] = pygame.Rect(150,565, 80, 90)
+        for i in range(0, 17):
+            self.almanach_pates[f'id{i}'] = Pate(i)
+    
+    def anim_pate(self, pate):
+        tab = pate.lien.split('/')
+        print(pate.nb_sprite)  
+        tab[4] = str((int(tab[4][0])+1)%pate.nb_sprite)+'.png'
+        lien = ''
+        for i in tab:
+            lien += i+'/'
+        pate.lien = lien[:len(lien)-1]
 
     def refresh(self, types = None):
 
@@ -445,10 +456,12 @@ class Game:
         else:
             print('pate', self.color_spe , self.color_pas)
             for j in range(self.curseur, self.curseur+8):
+                
+                tmp = pygame.image.load(self.almanach_pates[f'id{j}'].lien)
+                tmp = pygame.transform.scale(tmp, (80, 90))
+                screen.blit(tmp, (150+(j-self.curseur)*100, 565))
 
-                self.almanach_pates[f'id{j}'] = pygame.Rect(150+(j-self.curseur)*100, 565, 80 ,90)
-
-                pygame.draw.rect(self.screen, (self.color_spe + self.color_pas*j, self.color_spe + self.color_pas*j, self.color_spe + self.color_pas*j), self.almanach_pates[f'id{j}'])
+                self.anim_pate(self.almanach_pates[f'id{j}'])
 
             print('refresh des pates')
         print(self.curseur, "Valeur du curseur")
@@ -510,8 +523,6 @@ class Game:
         
         screen.blit(self.gauchechoice, (130, 130))
         screen.blit(self.droitechoice, (130, 130))
-        
-
 
     def connect(self, id):
         info = self.db("SELECT money, lvl, monde FROM players where id = ?", (id,))
@@ -752,7 +763,7 @@ class Game:
     
     def run(self):
         self.display()
-        p, n, v = 0, 0, 0
+        p, n, v, k = 0, 0, 0, 0
         
         while self.running:
             if self.menu == 'title':
@@ -767,6 +778,11 @@ class Game:
                     if v%8 == 0:
                         self.terrain.add_enemy()
                     self.terrain.update_terrain(self.screen)
+            if self.menu == 'almanach':
+                k += 1
+                if k%16 == 0:
+                    self.lien = self.anim(self.lien)
+                    self.display()
             self.gestion_events()
             self.clock.tick(144)
 

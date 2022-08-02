@@ -20,7 +20,7 @@ class Terrain:
         self.mob_wave.reverse()
 
         '''
-        self.mob_wave = [0,5,0,0,0,0]
+        self.mob_wave = [5]
         self.monde = monde
         self.terrain_enemy = [[], [], [], [], []]
         self.using_pates = None
@@ -98,6 +98,9 @@ class Terrain:
                 return None
 
     def update_terrain(self, screen):
+        self.fond = pygame.Rect(100, 100, 1080, 720)
+        pygame.draw.rect(screen, (44, 47, 51), self.fond)
+
         self.terrain = pygame.image.load('../Font/Terrain/damier.png')
         screen.blit(self.terrain, (150,150))
 
@@ -116,9 +119,13 @@ class Terrain:
 
         for ligne in self.terrain_enemy:
             for plante in ligne:
+                print(plante)
                 image = pygame.image.load(plante[0].lien)
                 image = pygame.transform.scale(image, (100, 100))
-                plante.append(image)
+                if len(plante) == 2:
+                    plante[1] = image
+                else:
+                    plante.append(image)
                 screen.blit(plante[1], (plante[0].pos_x, plante[0].pos_y))
                 self.anim_plante(plante[0])
                 
@@ -127,7 +134,6 @@ class Terrain:
         pygame.display.flip()
 
     def add_enemy(self):
-        print(self.terrain_enemy)
         if len(self.mob_wave) > 0:
             # Ajouter les plantes
             if self.mob_wave[len(self.mob_wave)-1] >= 0:
@@ -182,16 +188,14 @@ class Terrain:
     def anim_plante(self, plante):
         plante.pos_x -= plante.ms
         lien = plante.lien
-        print(lien)
         tab = lien.split('/')
-        print(tab)
-        tab[4] = str((int(tab[4][0])+1)%plante.nb_sprite)+'.png'
+        temp = int(tab[4][0])+1
+        tab[4] = str(temp%plante.nb_sprite)+'.png'
+        print(tab[4], plante.nb_sprite, (int(tab[4][0])+1)%plante.nb_sprite)
         lien = ''
         for i in tab:
             lien += i+'/'
-        lien = lien[:len(lien)-1]
-        print(lien)
-        return lien
+        plante.lien = lien[:len(lien)-1]
 
 class case:
     def __init__(self, id, rect, co, ligne) -> None:

@@ -5,7 +5,7 @@ class Plante:
     def __init__(self, id, ligne) -> None:
         self.id = id
         self.pos_x = 1080
-        self.pos_y = 145+ligne*100
+        self.pos_y = 160+ligne*100
         self.nom = self.get_stat('nom')
         self.pv = self.get_stat('pv')
         self.atk = self.get_stat('atk')

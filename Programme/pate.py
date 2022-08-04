@@ -19,3 +19,11 @@ class Pate:
         sqliteConnection.commit()
         cursor.close()
         return stats[0]
+
+class Bullet:
+    def __init__(self, id, dmg, pos):
+        self.id = id
+        self.lien = f'../Font/HUD/bullet/pate{id}/0.png'
+        self.hitbox_x = pos[0]+80
+        self.hitbox_y = pos[1]+55
+        self.dmg = dmg

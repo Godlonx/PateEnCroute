@@ -21,9 +21,11 @@ class Pate:
         return stats[0]
 
 class Bullet:
-    def __init__(self, id, dmg, pos):
+    def __init__(self, id, dmg, pos, ligne):
         self.id = id
+        self.ligne = ligne
         self.lien = f'../Font/HUD/bullet/pate{id}/0.png'
-        self.hitbox_x = pos[0]+80
-        self.hitbox_y = pos[1]+55
+        self.pos_x = pos[0]+80
+        self.pos_y = pos[1]+55
+        self.hitbox = pygame.Rect(self.pos_x, self.pos_y, 24, 16)
         self.dmg = dmg

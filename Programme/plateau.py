@@ -15,7 +15,7 @@ class Terrain:
         self.tab_case = {}
         self.info_pates = pates
         self.wave = Wave(monde, 15, 2)
-        self.missiles = []
+        self.missiles = [[], [], [], [], []]
         '''  A mettre apres les test lorsque l'on auras tous les sprites :
         
         self.mob_wave = self.wave.mob_spawn_list
@@ -99,8 +99,7 @@ class Terrain:
                     return 'pause'
                 return None
         
-
-
+        
     def update_terrain(self, screen):
         self.fond = pygame.Rect(100, 100, 1080, 720)
         pygame.draw.rect(screen, (44, 47, 51), self.fond)
@@ -123,21 +122,28 @@ class Terrain:
 
         for ligne in self.terrain_enemy:
             for plante in ligne:
-                image = pygame.image.load(plante[0].lien)
+                image = pygame.image.load(plante.lien)
                 image = pygame.transform.scale(image, (100, 100))
-                if len(plante) == 2:
-                    plante[1] = image
-                else:
-                    plante.append(image)
-                screen.blit(plante[1], (plante[0].pos_x, plante[0].pos_y))
-                self.anim_plante(plante[0])
+                plante.hitbox = pygame.Rect(plante.pos_x, plante.pos_y, 100, 100)
+                screen.blit(image, (plante.pos_x, plante.pos_y))
+                self.anim_plante(plante)
 
-        for missile in self.missiles:
-            print("mouv")
-            tmp = pygame.image.load(missile.lien)
-            tmp = pygame.transform.scale(tmp, (24, 16))
-            screen.blit(tmp, (missile.hitbox_x, missile.hitbox_y))
-            self.anim_missile(missile)
+        for ligne in self.missiles:
+            ligne_tmp = ligne[:]
+            for missile in ligne:
+                if pygame.Rect.colliderect(missile.hitbox, self.terrain_enemy[missile.ligne][0].hitbox):
+                    ligne_tmp.remove(missile)
+                else:
+                    self.anim_missile(missile)
+                    tmp = pygame.image.load(missile.lien)
+                    tmp = pygame.transform.scale(tmp, (24, 16))
+                    screen.blit(tmp, (missile.pos_x, missile.pos_y))
+                    missile.hitbox = pygame.Rect(missile.pos_x, missile.pos_y, 24, 16)   
+            ligne = ligne_tmp
+                
+
+                
+
 
 
         pygame.display.flip()
@@ -147,11 +153,11 @@ class Terrain:
             # Ajouter les plantes
             if self.mob_wave[len(self.mob_wave)-1] >= 0:
                 ligne = randint(0, 4)
-                self.terrain_enemy[ligne].append([Plante(self.mob_wave.pop(), ligne)])
+                self.terrain_enemy[ligne].append(Plante(self.mob_wave.pop(), ligne))
             else:
                 for _ in range(abs(self.mob_wave.pop())):
                     ligne = randint(0, 4)
-                    self.terrain_enemy[ligne].append([Plante(self.mob_wave.pop(), ligne)])
+                    self.terrain_enemy[ligne].append(Plante(self.mob_wave.pop(), ligne))
 
         
 
@@ -170,8 +176,7 @@ class Terrain:
                     case.event = 'Normal'
                 elif case.anim_cd == 7:
                     ## Lance un missile
-                    print("missile", case.anim_cd)
-                    self.missiles.append(Bullet(case.used, self.pates[f'pate{case.used}'].atk, case.co))
+                    self.missiles[case.ligne].append(Bullet(case.used, self.pates[f'pate{case.used}'].atk, case.co, case.ligne))
                     case.anim_cd += 1
                 elif case.anim_cd < 9:
                     case.anim_cd += 1
@@ -211,10 +216,9 @@ class Terrain:
         plante.lien = lien[:len(lien)-1]
 
     def anim_missile(self, missile):
-        missile.hitbox_x += 5
+        missile.pos_x += 5
         lien = missile.lien
         tab = lien.split('/')
-        print(tab)
         temp = int(tab[5][0])+1
         tab[5] = str(temp%8)+'.png'
         lien = ''

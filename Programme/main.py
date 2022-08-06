@@ -5,6 +5,7 @@ from Player import Player
 from inputbox import InputBox
 from plateau import Terrain
 from pate import Pate
+from plante import Plante
 ##### 720x1080 screen
 
 
@@ -28,6 +29,7 @@ class Game:
         self.font = pygame.font.Font(None, 40)
         self.drawed_first = True
         self.menu = 'title'
+        self.almanach = 'pates'
         
     def Draw_menu(self, num):
         if num == 'title':
@@ -415,15 +417,11 @@ class Game:
         screen.blit(self.bouton_retour, (20, 20))
         self.refresh()
 
-    def DrawAffiche(self):
-        pass
-
     def Part_plantes(self):
-        
         print('OK chgt plante')
         self.almanach_plantes = {}
         for i in range(0, 17):
-            self.almanach_plantes[f'id{i}'] = pygame.Rect(150,565, 80, 90)
+            self.almanach_plantes[f'id{i}'] = Plante(i)
 
     def Part_pates(self):
         print('OK chgt pate')
@@ -433,28 +431,33 @@ class Game:
     
     def anim_pate(self, pate):
         tab = pate.lien.split('/')
-        print(pate.nb_sprite)  
         tab[4] = str((int(tab[4][0])+1)%pate.nb_sprite)+'.png'
         lien = ''
         for i in tab:
             lien += i+'/'
         pate.lien = lien[:len(lien)-1]
 
-    def refresh(self, types = None):
+    def anim_plante(self, plante):
+        tab = plante.lien.split('/')
+        tab[4] = str((int(tab[4][0])+1)%plante.nb_sprite)+'.png'
+        lien = ''
+        for i in tab:
+            lien += i+'/'
+        plante.lien = lien[:len(lien)-1]
 
+    def refresh(self):
+        types = self.almanach
+        
         if types == 'plantes':
-            print('plantes', self.color_spe , self.color_pas)
             for j in range(self.curseur, self.curseur+8):
+                
+                tmp = pygame.image.load(self.almanach_plantes[f'id{j}'].lien)
+                tmp = pygame.transform.scale(tmp, (80, 90))
+                screen.blit(tmp, (150+(j-self.curseur)*100, 565))
 
-                self.almanach_plantes[f'id{j}'] = pygame.Rect(150+(j-self.curseur)*100, 565, 80 ,90)
-
-                pygame.draw.rect(self.screen, (self.color_spe + self.color_pas*j, self.color_spe + self.color_pas*j, self.color_spe + self.color_pas*j), self.almanach_plantes[f'id{j}'])
-
-
-            print('refresh des plantes')
+                self.anim_plante(self.almanach_plantes[f'id{j}'])
 
         else:
-            print('pate', self.color_spe , self.color_pas)
             for j in range(self.curseur, self.curseur+8):
                 
                 tmp = pygame.image.load(self.almanach_pates[f'id{j}'].lien)
@@ -463,7 +466,6 @@ class Game:
 
                 self.anim_pate(self.almanach_pates[f'id{j}'])
 
-            print('refresh des pates')
         print(self.curseur, "Valeur du curseur")
 
     def DrawPause(self):
@@ -696,14 +698,13 @@ class Game:
                             self.drawed_first = True
                         if pygame.Rect.collidepoint(self.PatesMenu, event.pos):
                             print(10000000)
-                            self.color_spe = 0
-                            self.color_pas = 5
-                            self.refresh('pates')
+                            self.almanach = 'pates'
+                            self.refresh()
                         if pygame.Rect.collidepoint(self.PlantesMenu, event.pos):
-                            self.color_spe = 220
-                            self.color_pas = -10
-                            self.refresh('plantes')
                             print(20000000)
+                            self.almanach = 'plantes'
+                            self.refresh()
+                            
 
                         self.display()
             

@@ -1,7 +1,7 @@
 import pygame
 from random import randint
 from wave_generator import Wave
-from enemy import Plante
+from plante import Plante
 from pate import Bullet
 import sqlite3
 

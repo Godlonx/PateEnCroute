@@ -333,22 +333,34 @@ class Game:
         self.fen = pygame.image.load('../Font/HUD/fond/fondnoir.png').convert_alpha()
         self.fen = pygame.transform.scale(self.fen, (640, 680))
         screen.blit(self.fen, (20, 20))
+        
 
 
         if self.drawed_first:
+            pate_unlock = []
+            tmp = self.db("Select id from Pates where nb_sprites > ?", (1,))
+            for i in tmp:
+                pate_unlock.append(i[0])
+            print(pate_unlock)
             self.pates_choisis = []
             self.pates = {}
             n = 0
             for i in range(7):
                 for j in range(6):
                     # 95 par ? avec 10 d'ecart en x et ? d'ecart en y
-                    self.pates[f'pate{n}'] = [pygame.Rect(30+j*105, 130+i*80, 95, 70),n, (0,255,255), ]
+                    if n in pate_unlock:
+                        self.pates[f'pate{n}'] = ['Unlock',pygame.Rect(30+j*105, 130+i*80, 95, 70),n, (0,255,255)]
+                    else:
+                        self.pates[f'pate{n}'] = ['Lock',pygame.Rect(30+j*105, 130+i*80, 95, 70), pygame.image.load('../Font/HUD/lock.png'), n, (30+j*105, 130+i*80)]
                     n += 1
             self.drawed_first = False
             
                 
         for pate in self.pates.keys():
-            pygame.draw.rect(self.screen, self.pates[pate][2], self.pates[pate][0])
+            if self.pates[pate][0] == 'Unlock':
+                pygame.draw.rect(self.screen, self.pates[pate][3], self.pates[pate][1])
+            else:
+                screen.blit(self.pates[pate][2], self.pates[pate][4])
 
         if len(self.pates_choisis) > 0:
             self.start = pygame.Rect(720, 600, 250, 80)
@@ -667,7 +679,7 @@ class Game:
                         if len(self.pates_choisis) >= 1:
                             if pygame.Rect.collidepoint(self.undo, event.pos):
                                 pates = self.pates_choisis.pop()
-                                self.pates[f'pate{pates}'][2] = (0, 255, 255)
+                                self.pates[f'pate{pates}'][3] = (0, 255, 255)
                                 self.display()
 
                             if pygame.Rect.collidepoint(self.start, event.pos):
@@ -679,12 +691,13 @@ class Game:
                             
                         if len(self.pates_choisis) < 6:
                             for pates in self.pates.keys():
-                                if pygame.Rect.collidepoint(self.pates[pates][0], event.pos):
-                                    if self.pates[pates][1] not in self.pates_choisis:
-                                        self.pates[pates][2] = (153, 170, 181)
-                                        self.pates_choisis.append(self.pates[pates][1])
-                                        self.display()
-                                        break
+                                if self.pates[pates][0] == 'Unlock':
+                                    if pygame.Rect.collidepoint(self.pates[pates][1], event.pos):
+                                        if self.pates[pates][2] not in self.pates_choisis:
+                                            self.pates[pates][3] = (153, 170, 181)
+                                            self.pates_choisis.append(self.pates[pates][2])
+                                            self.display()
+                                            break
 
             elif self.menu == 'almanach':
                 if event.type == pygame.MOUSEBUTTONUP:

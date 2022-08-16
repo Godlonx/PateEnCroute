@@ -792,6 +792,9 @@ class Game:
                     if v%8 == 0:
                         self.terrain.add_enemy()
                     self.terrain.update_terrain(self.screen)
+                if self.terrain.check_win() == 'Win':
+                    self.menu = 'map_monde'
+                    self.display()
             if self.menu == 'almanach':
                 k += 1
                 if k%16 == 0:

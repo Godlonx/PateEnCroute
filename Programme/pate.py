@@ -28,4 +28,4 @@ class Bullet:
         self.pos_x = pos[0]+80
         self.pos_y = pos[1]+55
         self.hitbox = pygame.Rect(self.pos_x, self.pos_y, 24, 16)
-        self.dmg = dmg
+        self.dmg = dmg + 20

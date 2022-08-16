@@ -1,7 +1,6 @@
 import pygame
 from random import randint
 from wave_generator import Wave
-from plante import Plante
 from pate import Bullet
 import sqlite3
 
@@ -16,13 +15,11 @@ class Terrain:
         self.info_pates = pates
         self.wave = Wave(monde, 15, 2)
         self.missiles = [[], [], [], [], []]
-        '''  A mettre apres les test lorsque l'on auras tous les sprites :
-        
+        '''
         self.mob_wave = self.wave.mob_spawn_list
         self.mob_wave.reverse()
-
         '''
-        self.mob_wave = [5]
+        self.mob_wave = [0]
         self.monde = monde
         self.terrain_enemy = [[], [], [], [], []]
         self.using_pates = None
@@ -99,7 +96,13 @@ class Terrain:
                     return 'pause'
                 return None
         
-        
+    def check_win(self):
+        if len(self.mob_wave) == 0:
+            for i in self.terrain_enemy:
+                if len(i) > 0:
+                    return None
+            return 'Win'
+    
     def update_terrain(self, screen):
         self.fond = pygame.Rect(100, 100, 1080, 720)
         pygame.draw.rect(screen, (44, 47, 51), self.fond)
@@ -122,24 +125,35 @@ class Terrain:
 
         for ligne in self.terrain_enemy:
             for plante in ligne:
+                
+                print(self.tab_case[f'case{plante.ligne + round((plante.pos_x-150)/100)}'].id)
+                if pygame.Rect.colliderect(plante.hitbox, self.tab_case[f'case{plante.ligne + round((plante.pos_x-150)/100)}'].pos):
+                    print('collision')
                 image = pygame.image.load(plante.lien)
                 image = pygame.transform.scale(image, (100, 100))
                 plante.hitbox = pygame.Rect(plante.pos_x, plante.pos_y, 100, 100)
                 screen.blit(image, (plante.pos_x, plante.pos_y))
                 self.anim_plante(plante)
+            
 
-        for ligne in self.missiles:
-            ligne_tmp = ligne[:]
-            for missile in ligne:
+        for ligne in range(len(self.missiles)):
+            ligne_tmp = self.missiles[ligne][:]
+            for missile in self.missiles[ligne]:
                 if pygame.Rect.colliderect(missile.hitbox, self.terrain_enemy[missile.ligne][0].hitbox):
                     ligne_tmp.remove(missile)
+                    print(self.terrain_enemy[missile.ligne][0].pv)
+                    self.terrain_enemy[missile.ligne][0].pv -= missile.dmg
+                    print(self.terrain_enemy[missile.ligne][0].pv)
                 else:
                     self.anim_missile(missile)
                     tmp = pygame.image.load(missile.lien)
                     tmp = pygame.transform.scale(tmp, (24, 16))
                     screen.blit(tmp, (missile.pos_x, missile.pos_y))
-                    missile.hitbox = pygame.Rect(missile.pos_x, missile.pos_y, 24, 16)   
-            ligne = ligne_tmp
+                    missile.hitbox = pygame.Rect(missile.pos_x, missile.pos_y, 24, 16)
+                if self.terrain_enemy[missile.ligne][0].pv <= 0:
+                    self.terrain_enemy[missile.ligne].remove(self.terrain_enemy[missile.ligne][0])
+            self.missiles[ligne] = ligne_tmp[:]
+            
                 
 
                 
@@ -231,6 +245,7 @@ class case:
     def __init__(self, id, rect, co, ligne) -> None:
         self.id = id
         self.ligne = ligne
+        self.case = ((co[0]-150)/100)
         self.cd = 10
         self.anim_normal = None
         self.anim_tir = None
@@ -263,3 +278,30 @@ class socket:
         sqliteConnection.commit()
         cursor.close()
         return stati
+
+class Plante:
+    def __init__(self, id, ligne):
+        self.id = id
+        self.ligne = ligne
+        self.pos_x = 1080
+        self.pos_y = 160+ligne*100
+        self.nom = self.get_stat('nom')
+        self.pv = self.get_stat('pv')
+        self.atk = self.get_stat('atk')
+        self.ms = self.get_stat('ms')
+        self.power_lvl = self.get_stat('pwr_lvl')
+        self.spawn_rate = self.get_stat('spawn_rate') 
+        self.hitbox = pygame.Rect(self.pos_x, self.pos_y, 100, 100)
+        self.load = False
+        self.lien = f'../Font/Plantes/{self.nom}/0.png'
+        self.nb_sprite = self.get_stat('nb_sprites')
+        
+
+    def get_stat(self, stat):
+        sqliteConnection = sqlite3.connect('../Documents/StatsPlayers.db')
+        cursor = sqliteConnection.cursor()
+        cursor.execute(f'''SELECT {stat} from Plantes where id = {self.id}''')
+        stats = cursor.fetchone()
+        sqliteConnection.commit()
+        cursor.close()
+        return stats[0]

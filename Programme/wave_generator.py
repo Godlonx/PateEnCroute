@@ -39,7 +39,7 @@ class Wave():
 
 
     def bestiaire_dispo(self): # récupéré depuis la database tout les mobs du monde: "self.monde"
-        idmob = self.db(f'Select id_mob from Bestiaire where id_monde = {self.monde}')
+        idmob = self.db(f'Select B.id_mob From Bestiaire as B join Plantes as P on B.id_mob = P.id where P.nb_sprites > 1 and B.id_monde = {self.monde};')
         for i in range(len(idmob)):
             self.mob_dispo.append(self.db(f'Select nom, pwr_lvl, id, spawn_rate from Plantes where id = {idmob[i][0]}'))
 
